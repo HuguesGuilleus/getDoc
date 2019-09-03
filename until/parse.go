@@ -1,8 +1,8 @@
 package until
 
 import (
-	// "strings"
 	"regexp"
+	"strings"
 )
 
 var (
@@ -44,4 +44,27 @@ func parseLines(rawLines []string) (parsedLines listLine) {
 		})
 	}
 	return
+}
+
+// Get all the commentary before a num line.
+// A empty commentary procuce a new line ('\n').
+func (list listLine) getComment(num int) string {
+	begin := num -1
+	for ; begin >= 0 ; begin-- {
+		if list[begin].Type != TYPE_COMMENT {
+			break;
+		}
+	}
+	builder := strings.Builder{}
+	begin++
+	for ; begin < num ; begin++ {
+		str := list[begin].Str
+		if len(str) == 0 {
+			builder.WriteRune('\n')
+		} else {
+			builder.WriteString(list[begin].Str)
+			builder.WriteRune(' ')
+		}
+	}
+	return builder.String()
 }

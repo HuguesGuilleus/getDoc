@@ -42,3 +42,49 @@ func TestParseLines(t *testing.T) {
 	}
 	assert.Equal(t, parseLines(input), expected, "")
 }
+
+func TestGetComment(t *testing.T) {
+	t.Run("Get Before",func(t *testing.T) {
+		before := []int{
+			TYPE_CODE,
+			TYPE_FUNCTION,
+			TYPE_TYPEDEF,
+		}
+		for _, ty := range before {
+			list := listLine{
+				&Line{
+					Type: ty,
+					Str: "xxx",
+				},
+				&Line{
+					Type: TYPE_COMMENT,
+					Str:  "aaa",
+				},
+				&Line{
+					Type: TYPE_COMMENT,
+					Str:  "bbb",
+				},
+				&Line{},
+			}
+			assert.Equal(t, "aaa bbb ", list.getComment(3), "")
+		}
+	})
+	t.Run("Mult Line",func(t *testing.T) {
+		list := listLine{
+			&Line{
+				Type: TYPE_COMMENT,
+				Str:  "aaa",
+			},
+			&Line{
+				Type: TYPE_COMMENT,
+				Str:  "",
+			},
+			&Line{
+				Type: TYPE_COMMENT,
+				Str:  "bbb",
+			},
+			&Line{},
+		}
+		assert.Equal(t,"aaa \nbbb ", list.getComment(3), "")
+	})
+}
