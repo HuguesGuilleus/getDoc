@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	lineComment  = regexp.MustCompile("\\s*//.*")
+	lineComment  = regexp.MustCompile("\\s*/{2,}\\s*")
 	lineFunction = regexp.MustCompile("\\s*[\\w\\[\\]*]+\\s+\\w+\\(.*\\).*")
 	lineTypedef  = regexp.MustCompile("\\s*typedef.*")
 )
@@ -27,10 +27,14 @@ type listLine []*Line
 
 // Choose the type of each line
 func parseLines(rawLines []string) (parsedLines listLine) {
+	t := 0
 	for _, line := range rawLines {
-		t := 0
 		if lineComment.MatchString(line) {
-			t = TYPE_COMMENT
+			parsedLines = append(parsedLines, &Line{
+				Type: TYPE_COMMENT,
+				Str:  lineComment.ReplaceAllString(line, ""),
+			})
+			continue
 		} else if lineFunction.MatchString(line) {
 			t = TYPE_FUNCTION
 		} else if lineTypedef.MatchString(line) {
@@ -49,15 +53,15 @@ func parseLines(rawLines []string) (parsedLines listLine) {
 // Get all the commentary before a num line.
 // A empty commentary procuce a new line ('\n').
 func (list listLine) getComment(num int) string {
-	begin := num -1
-	for ; begin >= 0 ; begin-- {
+	begin := num - 1
+	for ; begin >= 0; begin-- {
 		if list[begin].Type != TYPE_COMMENT {
-			break;
+			break
 		}
 	}
 	builder := strings.Builder{}
 	begin++
-	for ; begin < num ; begin++ {
+	for ; begin < num; begin++ {
 		str := list[begin].Str
 		if len(str) == 0 {
 			builder.WriteRune('\n')
