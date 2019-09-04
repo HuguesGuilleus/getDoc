@@ -1,13 +1,14 @@
 package until
 
 import (
+	"io/ioutil"
 	"regexp"
 	"strings"
 )
 
 var (
 	lineComment  = regexp.MustCompile("\\s*/{2,}\\s*")
-	lineFunction = regexp.MustCompile("\\s*[\\w\\[\\]*]+\\s+\\w+\\(.*\\).*")
+	lineFunction = regexp.MustCompile("\\s*[\\w\\[\\]*]+\\s+\\w+\\(.*\\).*{")
 	lineTypedef  = regexp.MustCompile("\\s*typedef.*")
 )
 
@@ -24,6 +25,16 @@ type Line struct {
 }
 
 type listLine []*Line
+
+
+// Read and split file in a string for each line. If error, panic.
+func splitFile(path string) []string {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	return strings.Split(string(data),"\n")
+}
 
 // Choose the type of each line
 func parseLines(rawLines []string) (parsedLines listLine) {
