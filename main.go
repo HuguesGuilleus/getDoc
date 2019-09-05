@@ -17,6 +17,4 @@ func main() {
 	}
 	defer file.Close()
 	data.Index.Execute(file, index)
-
-	// ioutil.WriteFile("index.html", )
 }

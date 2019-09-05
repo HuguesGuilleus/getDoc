@@ -1,7 +1,5 @@
 package data
-var index = `
-
-<!DOCTYPE html>
+var index = `<!DOCTYPE html>
 <html lang="fr">
 <head>
 	<meta charset="utf-8">
@@ -9,11 +7,11 @@ var index = `
 </head>
 <body>
 	<h1>Functions et Types</h1>
-	<h2>Fonctions</h2>
-	<ul id="list">
-		{{ range . }}
-		<li class="type_{{.Type}}">
 
+	<h2>Éléments</h2>
+	<ul id="list">
+		{{- range . }}
+		<li class="type_{{.Type}}">
 			<h3>{{ .Name }}</h3>
 			<div class="type">{{- .Type -}}</div>
 			<div class="fileRef">
@@ -21,10 +19,16 @@ var index = `
 			</div>
 			{{ range .Comment -}}
 				<p class="comment">{{.}}</p>
-			{{- end -}}
+			{{- end }}
 		</li>
 		{{- end }}
+	</ul>
 
+	<h3>Fichiers</h3>
+	<ul>
+		{{- range .ListFile }}
+		<li class="file">{{.}}</li>
+		{{- end }}
 	</ul>
 </body>
 </html>

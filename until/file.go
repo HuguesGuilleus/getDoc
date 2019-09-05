@@ -2,6 +2,7 @@ package until
 
 import (
 	"strings"
+	"sort"
 )
 
 type Item struct {
@@ -15,6 +16,7 @@ type Item struct {
 // A list a Item
 type Index []*Item
 
+// Read the file of path, axtract and add the doc to the index
 func (ind *Index) AddFile(path string) {
 	allLines := parseLines(splitFile(path))
 	for i,line := range allLines {
@@ -38,4 +40,21 @@ func (ind *Index) AddFile(path string) {
 			})
 		}
 	}
+}
+
+// List all file documented in the Index
+func (ind Index) ListFile() (new []string) {
+	all := []string{}
+	for _, item := range ind {
+		all = append(all, item.FileName)
+	}
+	sort.Strings(all)
+	last := ""
+	for _, file := range all {
+		if last != file {
+			new = append(new, file)
+			last = file
+		}
+	}
+	return
 }
