@@ -25,6 +25,7 @@ func langC_parse(index *Index, lines fileLines, fileName string) {
 				FileName: fileName,
 				LineNum:  i + 1,
 				Comment:  comment,
+				Lang: "c",
 			})
 		}
 	}

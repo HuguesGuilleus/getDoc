@@ -2,6 +2,8 @@ package doc
 
 import ()
 
-type parserFunc func(lines fileLines, index *Index)
+type parserFunc func(index *Index, lines fileLines, fileName string)
 
-var parserList = map[string]parserFunc{}
+var parserList = map[string]parserFunc{
+	"c": langC_parse,
+}

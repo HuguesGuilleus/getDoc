@@ -37,10 +37,10 @@ func TestGetExt(t *testing.T) {
 func TestLangKnown(t *testing.T) {
 	parserListSave := parserList
 	defer func() { parserList = parserListSave }()
-	f1 := func(lines fileLines, ind *Index) {}
+	f1 := func(ind *Index, lines fileLines, path string) {}
 	parserList = map[string]parserFunc{
 		"a": f1,
-		"b": func(lines fileLines, ind *Index) {},
+		"b": func(ind *Index, lines fileLines, path string) {},
 	}
 	// todo: verify by pointer...
 	if langKnown("a") == nil {

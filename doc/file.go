@@ -31,6 +31,8 @@ type Element struct {
 	LineNum int
 	// The comment before the element. Each item is a paragraph.
 	Comment []string
+	// The language of the file
+	Lang string
 }
 
 // All the element of a project

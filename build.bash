@@ -3,12 +3,12 @@
 clear
 
 # Template
-cd data/
+cd doc/data/
 printf "package data
 var index = \`" > index.go
 cat index.gohtml >> index.go
 echo '`' >> index.go
-cd ..
+cd ../..
 
 # Build
 go build
