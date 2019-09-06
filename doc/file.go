@@ -7,7 +7,11 @@ import (
 )
 
 const (
-	TYPE_NODEF = 0
+	TYPE_NODEF    = 0
+	TYPE_COMMENT  = 1
+	TYPE_CODE     = 2
+	TYPE_FUNCTION = 3
+	TYPE_TYPEDEF  = 4
 )
 
 var extRegexp = regexp.MustCompile(".*\\.(\\w+)$")
@@ -74,4 +78,32 @@ func splitFile(path string) (lines fileLines) {
 		})
 	}
 	return
+}
+
+// Get all the commentary before a num line.
+// A empty commentary procuce a new line ('\n').
+func (list fileLines) getComment(num int) (comment []string) {
+	begin := num - 1
+	for ; begin > -1; begin-- {
+		if list[begin].Type != TYPE_COMMENT {
+			break
+		}
+	}
+	if begin == num-1 {
+		return []string{}
+	}
+	builder := strings.Builder{}
+	for begin++; begin < num; begin++ {
+		str := list[begin].Str
+		if len(str) == 0 {
+			comment = append(comment, builder.String())
+			builder.Reset()
+		} else {
+			if builder.Len() != 0 {
+				builder.WriteRune(' ')
+			}
+			builder.WriteString(list[begin].Str)
+		}
+	}
+	return append(comment, builder.String())
 }

@@ -60,3 +60,59 @@ func TestSplitFile(t *testing.T) {
 		t.Error("The function must panic")
 	})
 }
+
+func TestGetComment(t *testing.T) {
+	t.Run("Get Before", func(t *testing.T) {
+		before := []int{
+			TYPE_CODE,
+			TYPE_FUNCTION,
+			TYPE_TYPEDEF,
+		}
+		for _, ty := range before {
+			list := fileLines{
+				&line{
+					Type: ty,
+					Str:  "xxx",
+				},
+				&line{
+					Type: TYPE_COMMENT,
+					Str:  "aaa",
+				},
+				&line{},
+			}
+			assert.Equal(t, []string{"aaa"}, list.getComment(2), "")
+		}
+	})
+	t.Run("Mult Line", func(t *testing.T) {
+		list := fileLines{
+			&line{
+				Type: TYPE_COMMENT,
+				Str:  "aaa",
+			},
+			&line{
+				Type: TYPE_COMMENT,
+				Str:  "",
+			},
+			&line{
+				Type: TYPE_COMMENT,
+				Str:  "bbb",
+			},
+			&line{
+				Type: TYPE_COMMENT,
+				Str:  "ccc",
+			},
+			&line{},
+		}
+		assert.Equal(t, []string{"aaa", "bbb ccc"}, list.getComment(4), "")
+	})
+	t.Run("No Comment", func(t *testing.T) {
+		list := fileLines{
+			&line{
+				Type: TYPE_CODE,
+				Str:  "xxx",
+			},
+			&line{},
+		}
+		assert.Equal(t, []string{}, list.getComment(1), "")
+	})
+}
