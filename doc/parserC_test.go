@@ -6,28 +6,77 @@ import (
 )
 
 func TestLangC_parse(t *testing.T) {
-	index := Index{}
-	fileName := "aaa.c"
-	lines := fileLines{
-		&line{
-			Str:  "// My function por Say Hello World.",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str:  "int hello() {",
-			Type: TYPE_FUNCTION,
-		},
-	}
-	elementFunc := Element{
-		Name:     "hello",
-		LineName: "int hello()",
-		Type:     "func",
-		FileName: fileName,
-		LineNum:  2,
-		Comment:  []string{"My function por Say Hello World."},
-	}
-	langC_parse(&index, lines, fileName)
-	assert.Equal(t, elementFunc, *index[0], "Function")
+	t.Run("Function", func(t *testing.T) {
+		index := Index{}
+		fileName := "aaa.c"
+		lines := fileLines{
+			&line{
+				Str:  "// My function por Say Hello World.",
+				Type: TYPE_COMMENT,
+			},
+			&line{
+				Str:  "int hello() {",
+				Type: TYPE_FUNCTION,
+			},
+		}
+		elementFunc := Element{
+			Name:     "hello",
+			LineName: "int hello()",
+			Type:     "func",
+			FileName: fileName,
+			LineNum:  2,
+			Comment:  []string{"My function por Say Hello World."},
+			Lang:     "c",
+		}
+		langC_parse(&index, lines, fileName)
+		assert.Equal(t, elementFunc, *index[0], "")
+	})
+	t.Run("TypedefSimple", func(t *testing.T) {
+		index := Index{}
+		lines := fileLines{
+			&line{
+				Str:  "typedef int bool ;",
+				Type: TYPE_TYPEDEF,
+			},
+		}
+		elementFunc := Element{
+			Name:     "bool",
+			LineName: "typedef int bool ;",
+			Type:     "type",
+			LineNum:  1,
+			Comment:  []string{},
+			Lang:     "c",
+		}
+		langC_parse(&index, lines, "")
+		assert.Equal(t, elementFunc, *index[0], "")
+	})
+	t.Run("TypedefMultlines", func(t *testing.T) {
+		index := Index{}
+		lines := fileLines{
+			&line{
+				Str:  "typedef struct {",
+				Type: TYPE_TYPEDEF,
+			},
+			&line{
+				Str: "	int swag ;",
+				Type: TYPE_CODE,
+			},
+			&line{
+				Str:  "} yolo ;",
+				Type: TYPE_CODE,
+			},
+		}
+		elementFunc := Element{
+			Name:     "yolo",
+			LineName: "typedef struct",
+			Type:     "type",
+			LineNum:  1,
+			Comment:  []string{},
+			Lang:     "c",
+		}
+		langC_parse(&index, lines, "")
+		assert.Equal(t, elementFunc, *index[0], "")
+	})
 }
 
 func TestLangCType(t *testing.T) {
@@ -37,6 +86,7 @@ func TestLangCType(t *testing.T) {
 		&line{Str: "	a = 4.2 ;"},
 		&line{Str: "int yolo(f float) {"},
 		&line{Str: "* int yolo(f float)"},
+		&line{Str: "typedef int bool ;"},
 	}
 	langC_type(input)
 	assert.Equal(t, fileLines{
@@ -59,6 +109,10 @@ func TestLangCType(t *testing.T) {
 		&line{
 			Str:  "* int yolo(f float)",
 			Type: TYPE_FUNCTION,
+		},
+		&line{
+			Str:  "typedef int bool ;",
+			Type: TYPE_TYPEDEF,
 		},
 	}, input, "")
 }
