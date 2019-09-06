@@ -28,7 +28,7 @@ func (ind *Index) saveHTMLinDir(path string) {
 // Save the doc in path
 func (ind *Index) saveHTMLinFile(path string) {
 	if ind == nil {
-		fmt.Fprintln(os.Stderr,"The index is null")
+		fmt.Fprintln(os.Stderr, "The index is null")
 		return
 	}
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0664)

@@ -1,10 +1,10 @@
 package doc
 
 import (
-	"sync"
 	"io/ioutil"
 	"log"
 	"os"
+	"sync"
 )
 
 // Read a file or a directory
@@ -34,10 +34,10 @@ func (ind *Index) readDir(path string, wg *sync.WaitGroup) {
 	if path[len(path)-1] != '/' {
 		path += "/"
 	}
-	log.Print("READ DIRE: ",path)
+	log.Print("READ DIRE: ", path)
 	files, err := ioutil.ReadDir(path)
-	if err != nil{
-		log.Print("Error",err)
+	if err != nil {
+		log.Print("Error", err)
 		return
 	}
 	for _, file := range files {
@@ -55,14 +55,14 @@ func (ind *Index) readFile(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	defer rec()
 	if parser := langKnown(getExt(path)); parser != nil {
-		log.Print("READ FILE: ",path)
+		log.Print("READ FILE: ", path)
 		lines := splitFile(path)
 		parser(ind, lines, path)
 	}
 }
 
 // recover and print the error
-func rec()  {
+func rec() {
 	err := recover()
 	printErr(err)
 }
@@ -78,8 +78,8 @@ func printErr(err interface{}) {
 		// Prefix
 		oldPrefix := log.Prefix()
 		defer log.SetPrefix(oldPrefix)
-		log.SetPrefix("\033[01;31m"+oldPrefix)
+		log.SetPrefix("\033[01;31m" + oldPrefix)
 		// print
-		log.Print("ERROR: ",err,"\033[0m")
+		log.Print("ERROR: ", err, "\033[0m")
 	}
 }
