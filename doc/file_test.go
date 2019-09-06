@@ -13,6 +13,23 @@ func TestGetExt(t *testing.T) {
 	assert.Equal(t, "", getExt(""), "Input: <nothing>")
 }
 
+func TestLangKnown(t *testing.T) {
+	parserListSave := parserList
+	defer func() { parserList = parserListSave }()
+	f1 := func(lines fileLines, ind *Index) {}
+	parserList = map[string]parserFunc{
+		"a": f1,
+		"b": func(lines fileLines, ind *Index) {},
+	}
+	// todo: verify by pointer...
+	if langKnown("a") == nil {
+		t.Error("A known lang",)
+	}
+	if langKnown("zz") != nil {
+		t.Error("langKnown with unknwolang must return nil", langKnown("zz") )
+	}
+}
+
 func TestSplitFile(t *testing.T) {
 	t.Run("Normal", func(t *testing.T) {
 		assert.Equal(t, fileLines{
