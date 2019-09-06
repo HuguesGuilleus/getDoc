@@ -16,7 +16,7 @@ int main(int argc, char const *argv[]) {
 	return 0;
 }
 
-// My function por Say Hello Wordl.
+// My function por Say Hello World.
 int hello() {
 	printf("Hello World\n");
 	return 0;
