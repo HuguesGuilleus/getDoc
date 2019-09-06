@@ -2,9 +2,12 @@ package main
 
 import (
 	"./doc"
+	"log"
 )
 
 func main() {
-	ind := doc.Read("dataTest/main.c")
+	log.SetPrefix("==== ")
+	log.SetFlags(0)
+	ind := doc.Read("dataTest/")
 	ind.SaveHTML("./doc.html")
 }

@@ -1,25 +1,78 @@
 package doc
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 )
 
+// Read a file or a directory
 func Read(path string) (ind *Index) {
-	ind = &Index{}
-	blobInfo, _ := os.Stat(path)
+	if ind == nil {
+		ind = &Index{}
+	}
+	blobInfo, err := os.Stat(path)
+	if err != nil {
+		printErr(err)
+		return
+	}
 	if blobInfo.IsDir() {
-		// ind.readDir()
+		ind.readDir(path)
 	} else {
 		ind.readFile(path)
 	}
 	return
 }
 
+// read a dir and for each file call readDir or readFile
+func (ind *Index) readDir(path string) {
+	if path[len(path)-1] != '/' {
+		path += "/"
+	}
+	log.Print("READ DIRE: ",path)
+	files, err := ioutil.ReadDir(path)
+	if err != nil{
+		log.Print("Error",err)
+		return
+	}
+	for _, file := range files {
+		if file.IsDir() {
+			ind.readDir(path+file.Name())
+		} else {
+			ind.readFile(path+file.Name())
+		}
+	}
+}
+
+// Read one file, test if the type is know, split the line and call the parser
 func (ind *Index) readFile(path string) {
+	defer rec()
 	if parser := langKnown(getExt(path)); parser != nil {
-		log.Print("READ FILE:",path)
+		log.Print("READ FILE: ",path)
 		lines := splitFile(path)
 		parser(ind, lines, path)
+	}
+}
+
+// recover and print the error
+func rec()  {
+	err := recover()
+	printErr(err)
+}
+
+// Print a error in os.Stderr with red
+func printErr(err interface{}) {
+	if err != nil {
+		// Output
+		// for 1.13 update
+		// oldWriter := log.Writer()
+		// defer log.SetOutput(oldWriter)
+		// log.SetOutput(os.Stderr)
+		// Prefix
+		oldPrefix := log.Prefix()
+		defer log.SetPrefix(oldPrefix)
+		log.SetPrefix("\033[01;31m"+oldPrefix)
+		// print
+		log.Print("ERROR: ",err,"\033[0m")
 	}
 }
