@@ -17,6 +17,15 @@ func TestIndexPush(t *testing.T) {
 	}
 }
 
+func TestListFile(t *testing.T) {
+	ind := Index{
+		&Element{FileName: "yolo"},
+		&Element{FileName: "swag"},
+		&Element{FileName: "swag"},
+	}
+	assert.Equal(t, []string{"swag", "yolo"}, ind.ListFile(), "")
+}
+
 func TestGetExt(t *testing.T) {
 	assert.Equal(t, "c", getExt("aaa/a.ed.c"), "Input: aaa/a.ed.c")
 	assert.Equal(t, "h", getExt("aaa/aded.h"), "Input: aaa/aded.h")

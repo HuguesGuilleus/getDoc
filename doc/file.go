@@ -3,6 +3,7 @@ package doc
 import (
 	"io/ioutil"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -38,6 +39,24 @@ type Index []*Element
 // push a element to an Index
 func (ind *Index) push(el *Element) {
 	*ind = append(*ind, el)
+}
+
+// List all file who have an element of the list.
+// The return list are sorted and all file are uniq
+func (ind Index) ListFile() (files []string) {
+	all := []string{}
+	for _, el := range ind {
+		all = append(all, el.FileName)
+	}
+	sort.Strings(all)
+	last := ""
+	for _, file := range all {
+		if last != file {
+			files = append(files, file)
+			last = file
+		}
+	}
+	return
 }
 
 // One line with her type and the content
