@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+func TestIndexPush(t *testing.T) {
+	ind := &Index{}
+	el := &Element{
+		Name: "yolo",
+	}
+	ind.push(el)
+	assert.Equal(t, 1, len(*ind), "length must 1")
+	if len(*ind) == 1 {
+		assert.Equal(t, el, (*ind)[0], "The first Element")
+	}
+}
+
 func TestGetExt(t *testing.T) {
 	assert.Equal(t, "c", getExt("aaa/a.ed.c"), "Input: aaa/a.ed.c")
 	assert.Equal(t, "h", getExt("aaa/aded.h"), "Input: aaa/aded.h")
@@ -23,10 +35,10 @@ func TestLangKnown(t *testing.T) {
 	}
 	// todo: verify by pointer...
 	if langKnown("a") == nil {
-		t.Error("A known lang",)
+		t.Error("A known lang")
 	}
 	if langKnown("zz") != nil {
-		t.Error("langKnown with unknwolang must return nil", langKnown("zz") )
+		t.Error("langKnown with unknwolang must return nil", langKnown("zz"))
 	}
 }
 
