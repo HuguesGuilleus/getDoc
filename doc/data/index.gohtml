@@ -15,8 +15,8 @@
 			<div class="type">{{- .Type -}}</div>
 			<div class="fileRef">{{- .FileName }}:{{ .LineNum -}}</div>
 			<div class="lang">{{- .Lang -}}</div>
-			{{ range .Comment -}}
-				<p class="comment">{{.}}</p>
+			{{- range .Comment }}
+			<p class="comment">{{.}}</p>
 			{{- end }}
 		</li>
 		{{- end }}
