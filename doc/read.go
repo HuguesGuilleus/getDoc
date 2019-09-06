@@ -1,6 +1,7 @@
 package doc
 
 import (
+	"sync"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,16 +17,20 @@ func Read(path string) (ind *Index) {
 		printErr(err)
 		return
 	}
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
 	if blobInfo.IsDir() {
-		ind.readDir(path)
+		ind.readDir(path, wg)
 	} else {
-		ind.readFile(path)
+		ind.readFile(path, wg)
 	}
+	wg.Wait()
 	return
 }
 
 // read a dir and for each file call readDir or readFile
-func (ind *Index) readDir(path string) {
+func (ind *Index) readDir(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	if path[len(path)-1] != '/' {
 		path += "/"
 	}
@@ -36,16 +41,18 @@ func (ind *Index) readDir(path string) {
 		return
 	}
 	for _, file := range files {
+		wg.Add(1)
 		if file.IsDir() {
-			ind.readDir(path+file.Name())
+			ind.readDir(path+file.Name(), wg)
 		} else {
-			ind.readFile(path+file.Name())
+			ind.readFile(path+file.Name(), wg)
 		}
 	}
 }
 
 // Read one file, test if the type is know, split the line and call the parser
-func (ind *Index) readFile(path string) {
+func (ind *Index) readFile(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	defer rec()
 	if parser := langKnown(getExt(path)); parser != nil {
 		log.Print("READ FILE: ",path)
