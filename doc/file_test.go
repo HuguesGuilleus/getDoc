@@ -31,6 +31,8 @@ func TestGetExt(t *testing.T) {
 	assert.Equal(t, "h", getExt("aaa/aded.h"), "Input: aaa/aded.h")
 	assert.Equal(t, "go", getExt("aaa/ad.go"), "Input: aaa/ad.go")
 	assert.Equal(t, "js", getExt("aaa/ad.js"), "Input: aaa/ad.js")
+	assert.Equal(t, "Makefile", getExt("Makefile"), "Input: Makefile")
+	assert.Equal(t, "Makefile", getExt("./Makefile"), "Input: ./Makefile")
 	assert.Equal(t, "", getExt(""), "Input: <nothing>")
 }
 

@@ -15,7 +15,10 @@ const (
 	TYPE_TYPEDEF  = 4
 )
 
-var extRegexp = regexp.MustCompile(".*\\.(\\w+)$")
+var (
+	getExtDot   = regexp.MustCompile(".*\\.(\\w+)$")
+	getExtSlash = regexp.MustCompile(".*/(\\w+)$")
+)
 
 // On element: function, var, typedef, class ...
 type Element struct {
@@ -72,7 +75,11 @@ type fileLines []*line
 
 // Get the extention of a file
 func getExt(path string) string {
-	return extRegexp.ReplaceAllString(path, "$1")
+	if getExtDot.MatchString(path) {
+		return getExtDot.ReplaceAllString(path, "$1")
+	} else {
+		return getExtSlash.ReplaceAllString(path, "$1")
+	}
 }
 
 // return the parser for the lang. If there are no parser,
