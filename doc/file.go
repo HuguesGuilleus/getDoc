@@ -64,7 +64,7 @@ func (ind *Index) Date() string {
 		printErr(err)
 		return ""
 	}
-	dataTime = dataTime[1:len(dataTime)-1]
+	dataTime = dataTime[1 : len(dataTime)-1]
 	return string(dataTime)
 }
 
