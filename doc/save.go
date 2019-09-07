@@ -13,11 +13,7 @@ import (
 // Save the index in a a file in html
 func (ind *Index) SaveHTML(path string) {
 	blobInfo, err := os.Stat(path)
-	if err != nil {
-		printErr(err)
-		return
-	}
-	if blobInfo.IsDir() {
+	if err == nil && blobInfo.IsDir() {
 		ind.saveHTMLinDir(path)
 	} else {
 		ind.saveHTMLinFile(path)
