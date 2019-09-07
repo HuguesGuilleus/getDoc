@@ -5,11 +5,11 @@ import (
 )
 
 // TODO: search many variable def in the same line
-// TODO: (langGO) push the elemnt to the index
 
 var (
 	langGo_comment        = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
 	langGo_func           = regexp.MustCompile("^(func\\s+(?:\\(.*\\)\\s+)?\\w+\\(.*\\))\\s+{")
+	langGo_funcName       = regexp.MustCompile("^func\\s+(?:\\(.*\\)\\s+)?(\\w+)\\(.*\\)")
 	langGo_typedef        = regexp.MustCompile("^(type\\s+\\w+\\s+[^{ ]*).*")
 	langGo_varSimple      = regexp.MustCompile("^(var\\s+\\w+\\s+(?:[^=]*)?(?:=.*)?)")
 	langGo_constSimple    = regexp.MustCompile("^(const\\s+\\w+\\s+(?:[^=]*)?(?:=.*)?)")
@@ -17,10 +17,40 @@ var (
 	langGo_constBegin     = regexp.MustCompile("^const\\s+\\(\\s*")
 	langGo_varConstMiddle = regexp.MustCompile("\\s*\\w+.*")
 	langGo_varConstEnd    = regexp.MustCompile("\\s*\\)\\s*")
+	langGo_Name           = regexp.MustCompile("\\s*(?:type|var|const)?\\s*(\\w+).*")
+	langGo_Space          = regexp.MustCompile("^\\s*(.*)\\s*$")
 )
 
 func langGo_parse(index *Index, lines fileLines, fileName string) {
 	langGo_type(lines)
+	for i, l := range lines {
+		var ty, name string
+		switch l.Type {
+		case TYPE_FUNCTION:
+			name = langGo_funcName.ReplaceAllString(l.Str, "$1")
+			ty = "func"
+		case TYPE_TYPEDEF:
+			name = langGo_Name.ReplaceAllString(l.Str, "$1")
+			ty = "type"
+		case TYPE_VAR:
+			name = langGo_Name.ReplaceAllString(l.Str, "$1")
+			ty = "var"
+		case TYPE_CONST:
+			name = langGo_Name.ReplaceAllString(l.Str, "$1")
+			ty = "const"
+		default:
+			continue
+		}
+		index.push(&Element{
+			Name:     name,
+			LineName: l.Str,
+			FileName: fileName,
+			Comment:  lines.getComment(i),
+			Type:     ty,
+			LineNum:  i + 1,
+			Lang:     "go",
+		})
+	}
 }
 
 func langGo_type(lines fileLines) {
@@ -35,6 +65,7 @@ func langGo_type(lines fileLines) {
 				l.Type = TYPE_CODE
 				mode = TYPE_NODEF
 			} else if langGo_varConstMiddle.MatchString(l.Str) {
+				l.Str = langGo_Space.ReplaceAllString(l.Str, "$1")
 				l.Type = mode
 			} else {
 				l.Type = TYPE_CODE
