@@ -23,7 +23,8 @@ var parserList = map[string]parserFunc{
 	"c":  langC_parse,
 	"h":  langC_parse,
 	"js": langJs_parse,
+	"go": langGo_parse,
 }
 
-// Simple secure fo r the list
+// Simple secure for the list
 var parserListMutex sync.Mutex
