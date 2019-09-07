@@ -44,7 +44,12 @@ func (ind *Index) saveHTMLinFile(path string) {
 		fmt.Fprintln(os.Stderr, err)
 	}
 	defer file.Close()
-	data.Index.Execute(file, *ind)
+	err = data.Index.Execute(file, ind)
+	if err != nil {
+		printErr(err)
+		return
+	}
+	log.Print("SAVED IN HTML: ", path)
 }
 
 // The index for XML and JSON encoding
