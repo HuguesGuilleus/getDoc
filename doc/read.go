@@ -71,10 +71,9 @@ func rec() {
 func printErr(err interface{}) {
 	if err != nil {
 		// Output
-		// for 1.13 update
-		// oldWriter := log.Writer()
-		// defer log.SetOutput(oldWriter)
-		// log.SetOutput(os.Stderr)
+		oldWriter := log.Writer()
+		defer log.SetOutput(oldWriter)
+		log.SetOutput(os.Stderr)
 		// Prefix
 		oldPrefix := log.Prefix()
 		defer log.SetPrefix(oldPrefix)

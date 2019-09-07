@@ -2,13 +2,20 @@ package doc
 
 import (
 	"./data"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 )
 
 // Save the index in a a file in html
 func (ind *Index) SaveHTML(path string) {
-	blobInfo, _ := os.Stat(path)
+	blobInfo, err := os.Stat(path)
+	if err != nil {
+		printErr(err)
+		return
+	}
 	if blobInfo.IsDir() {
 		ind.saveHTMLinDir(path)
 	} else {
@@ -37,4 +44,37 @@ func (ind *Index) saveHTMLinFile(path string) {
 	}
 	defer file.Close()
 	data.Index.Execute(file, *ind)
+}
+
+// The index for XML and JSON encoding
+type DataIndex struct {
+	List Index
+	Files []string
+	Date string
+}
+
+// Cast Index to DataIndex
+func (ind *Index) DataIndex() *DataIndex {
+	return &DataIndex{
+		List : *ind,
+		Files: ind.ListFile(),
+		Date: ind.Date(),
+	}
+}
+
+// Save the data in a file in JSON encoding
+// path must be a file not a directory
+func (ind *DataIndex) Json(path string) (err bool) {
+	data, e := json.Marshal(*ind)
+	if e != nil {
+		printErr(e)
+		return true
+	}
+	e = ioutil.WriteFile(path, data, 0664)
+	if e != nil {
+		printErr(e)
+		return true
+	}
+	log.Print("SAVED IN JSON: ",path)
+	return false
 }

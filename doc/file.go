@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 )
 
 var (
@@ -54,6 +55,16 @@ func (ind Index) ListFile() (files []string) {
 		}
 	}
 	return
+}
+
+// Get the time of the parse for use with JSON
+func (ind *Index) Date() string {
+	dataTime, err := time.Now().MarshalJSON()
+	if err != nil {
+		printErr(err)
+		return ""
+	}
+	return string(dataTime)
 }
 
 // One line with her type and the content
