@@ -49,7 +49,7 @@ func (ind *Index) saveHTMLinFile(path string) {
 		printErr(err)
 		return
 	}
-	log.Print("SAVED IN HTML: ", path)
+	log.Print("SAVE IN HTML: ", path)
 }
 
 // The index for XML and JSON encoding
@@ -81,7 +81,7 @@ func (ind *DataIndex) Json(path string) (err bool) {
 		printErr(e)
 		return true
 	}
-	log.Print("SAVED IN JSON: ", path)
+	log.Print("SAVE IN JSON: ", path)
 	return false
 }
 
@@ -98,6 +98,6 @@ func (ind *DataIndex) Xml(path string) (err bool) {
 		printErr(e)
 		return true
 	}
-	log.Print("SAVED IN XML: ", path)
+	log.Print("SAVE IN XML: ", path)
 	return false
 }

@@ -34,7 +34,7 @@ func (ind *Index) readDir(path string, wg *sync.WaitGroup) {
 	if path[len(path)-1] != '/' {
 		path += "/"
 	}
-	log.Print("READ DIRE: ", path)
+	log.Print("READ DIRECTORY: ", path)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Print("Error", err)
