@@ -1,23 +1,17 @@
-#include <stdio.h>
-
-// A cystom type for testing
-typedef struct {
-	int yolo;
-	char swag;
-} customType ;
-
-int hello();
+#include "main.h"
 
 // C'est la fête!
 //
 // The famous main function
 int main(int argc, char const *argv[]) {
 	hello();
+	ERR("C'est la merde %d!!!\n", 156);
 	return 0;
 }
 
 // My function por Say Hello World.
 int hello() {
-	printf("Hello World\n");
+	printf(HELLO);
+	printf(YOLO);
 	return 0;
 }
