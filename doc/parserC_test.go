@@ -31,6 +31,44 @@ func TestLangC_parse(t *testing.T) {
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
+	t.Run("MacroConst", func(t *testing.T) {
+		index := Index{}
+		lines := fileLines{
+			&line{
+				Str: "	#define YOLO 14",
+				Type: TYPE_COMMENT,
+			},
+		}
+		element := Element{
+			Name:     "YOLO",
+			LineName: "#define YOLO 14",
+			Type:     "macroConst",
+			LineNum:  1,
+			Comment:  []string{},
+			Lang:     "c",
+		}
+		langC_parse(&index, lines, "")
+		assert.Equal(t, element, *index[0], "")
+	})
+	t.Run("MacroFunc", func(t *testing.T) {
+		index := Index{}
+		lines := fileLines{
+			&line{
+				Str: "	#define ERR(xxx ...)	fprintf(stderr, xxx)",
+				Type: TYPE_COMMENT,
+			},
+		}
+		element := Element{
+			Name: "ERR",
+			LineName: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
+			Type:    "macroFunc",
+			LineNum: 1,
+			Comment: []string{},
+			Lang:    "c",
+		}
+		langC_parse(&index, lines, "")
+		assert.Equal(t, element, *index[0], "")
+	})
 	t.Run("TypedefSimple", func(t *testing.T) {
 		index := Index{}
 		lines := fileLines{
@@ -87,6 +125,8 @@ func TestLangCType(t *testing.T) {
 		&line{Str: "int yolo(f float) {"},
 		&line{Str: "* int yolo(f float)"},
 		&line{Str: "typedef int bool ;"},
+		&line{Str: "#define YOLO 42"},
+		&line{Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
 	}
 	langC_type(input)
 	assert.Equal(t, fileLines{
@@ -113,6 +153,14 @@ func TestLangCType(t *testing.T) {
 		&line{
 			Str:  "typedef int bool ;",
 			Type: TYPE_TYPEDEF,
+		},
+		&line{
+			Str:  "#define YOLO 42",
+			Type: TYPE_MACROCONST,
+		},
+		&line{
+			Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
+			Type: TYPE_MACROFUNC,
 		},
 	}, input, "")
 }

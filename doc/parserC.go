@@ -4,7 +4,6 @@ import (
 	"regexp"
 )
 
-// TODO: macro-const and macro-function
 // TODO: global variable
 
 var (
@@ -15,6 +14,9 @@ var (
 	langC_TypedefSimple    = regexp.MustCompile("\\s*typedef\\s+.*\\s+([\\w]+)\\s*;\\s*$")
 	langC_TypedefMultBegin = regexp.MustCompile("(typedef\\s*\\w+)\\s*{")
 	langC_TypedefMultEnd   = regexp.MustCompile("\\s*}\\s*(\\w+)\\s*;")
+	langC_MacroConst       = regexp.MustCompile("^\\s*(#define\\s+\\w+\\s+.+)$")
+	langC_MacroName        = regexp.MustCompile("^\\s*#define\\s+(\\w+).*")
+	langC_MacroFunc        = regexp.MustCompile("^\\s*(#define\\s+\\w+\\(.*\\)\\s+.+)$")
 )
 
 func langC_parse(index *Index, lines fileLines, fileName string) {
@@ -60,6 +62,26 @@ func langC_parse(index *Index, lines fileLines, fileName string) {
 					Lang:     "c",
 				})
 			}
+		case TYPE_MACROCONST:
+			index.push(&Element{
+				Name:     langC_MacroName.ReplaceAllString(l.Str, "$1"),
+				LineName: langC_MacroConst.ReplaceAllString(l.Str, "$1"),
+				Type:     "macroConst",
+				FileName: fileName,
+				LineNum:  i + 1,
+				Comment:  lines.getComment(i),
+				Lang:     "c",
+			})
+		case TYPE_MACROFUNC:
+			index.push(&Element{
+				Name:     langC_MacroName.ReplaceAllString(l.Str, "$1"),
+				LineName: langC_MacroFunc.ReplaceAllString(l.Str, "$1"),
+				Type:     "macroFunc",
+				FileName: fileName,
+				LineNum:  i + 1,
+				Comment:  lines.getComment(i),
+				Lang:     "c",
+			})
 		}
 	}
 }
@@ -71,13 +93,15 @@ func langC_type(lines fileLines) {
 		if langC_comment.MatchString(line.Str) {
 			line.Type = TYPE_COMMENT
 			line.Str = langC_comment.ReplaceAllString(line.Str, "$1")
-			continue
 		} else if langC_function.MatchString(line.Str) {
 			line.Type = TYPE_FUNCTION
 			line.Str = langC_function.ReplaceAllString(line.Str, "$1")
 		} else if langC_Typedef.MatchString(line.Str) {
 			line.Type = TYPE_TYPEDEF
-			line.Str = line.Str
+		} else if langC_MacroConst.MatchString(line.Str) {
+			line.Type = TYPE_MACROCONST
+		} else if langC_MacroFunc.MatchString(line.Str) {
+			line.Type = TYPE_MACROFUNC
 		} else {
 			line.Type = TYPE_CODE
 		}
