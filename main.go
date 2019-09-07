@@ -13,4 +13,5 @@ func main() {
 	ind := doc.Read("dataTest/")
 	ind.SaveHTML("./doc.html")
 	ind.DataIndex().Json("doc.json")
+	ind.DataIndex().Xml("doc.xml")
 }

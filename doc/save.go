@@ -3,6 +3,7 @@ package doc
 import (
 	"./data"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -48,24 +49,24 @@ func (ind *Index) saveHTMLinFile(path string) {
 
 // The index for XML and JSON encoding
 type DataIndex struct {
-	List Index
+	List  Index
 	Files []string
-	Date string
+	Date  string
 }
 
 // Cast Index to DataIndex
 func (ind *Index) DataIndex() *DataIndex {
 	return &DataIndex{
-		List : *ind,
+		List:  *ind,
 		Files: ind.ListFile(),
-		Date: ind.Date(),
+		Date:  ind.Date(),
 	}
 }
 
 // Save the data in a file in JSON encoding
 // path must be a file not a directory
 func (ind *DataIndex) Json(path string) (err bool) {
-	data, e := json.Marshal(*ind)
+	data, e := json.MarshalIndent(*ind, "", "\t")
 	if e != nil {
 		printErr(e)
 		return true
@@ -75,6 +76,23 @@ func (ind *DataIndex) Json(path string) (err bool) {
 		printErr(e)
 		return true
 	}
-	log.Print("SAVED IN JSON: ",path)
+	log.Print("SAVED IN JSON: ", path)
+	return false
+}
+
+// Save the data in a file in JSON encoding
+// path must be a file not a directory
+func (ind *DataIndex) Xml(path string) (err bool) {
+	data, e := xml.MarshalIndent(*ind, "", "\t")
+	if e != nil {
+		printErr(e)
+		return true
+	}
+	e = ioutil.WriteFile(path, data, 0664)
+	if e != nil {
+		printErr(e)
+		return true
+	}
+	log.Print("SAVED IN XML: ", path)
 	return false
 }
