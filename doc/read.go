@@ -20,9 +20,9 @@ func Read(path string) (ind *Index) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	if blobInfo.IsDir() {
-		ind.readDir(path, wg)
+		go ind.readDir(path, wg)
 	} else {
-		ind.readFile(path, wg)
+		go ind.readFile(path, wg)
 	}
 	wg.Wait()
 	return
@@ -43,9 +43,9 @@ func (ind *Index) readDir(path string, wg *sync.WaitGroup) {
 	for _, file := range files {
 		wg.Add(1)
 		if file.IsDir() {
-			ind.readDir(path+file.Name(), wg)
+			go ind.readDir(path+file.Name(), wg)
 		} else {
-			ind.readFile(path+file.Name(), wg)
+			go ind.readFile(path+file.Name(), wg)
 		}
 	}
 }
