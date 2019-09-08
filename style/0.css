@@ -32,6 +32,7 @@ body{
 	border-radius: 0.2ex;
 	padding: 1ex;
 	background: #2a2a2e;
+	break-inside: avoid;
 }
 .element:first-of-type, .filter:first-of-type {
 	margin-top: 0px;
