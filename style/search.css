@@ -39,6 +39,9 @@ h1{
 .searchIgnored{
 	color: #737373;
 }
+.searchError{
+	color: #d70022;
+}
 
 .find{
 	color: #ff9400;
