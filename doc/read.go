@@ -4,14 +4,15 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
+var Title string = ""
+
 // Read a file or a directory
 func Read(path string) (ind *Index) {
-	if ind == nil {
-		ind = &Index{}
-	}
+	ind = &Index{}
 	blobInfo, err := os.Stat(path)
 	if err != nil {
 		printErr(err)
@@ -21,8 +22,12 @@ func Read(path string) (ind *Index) {
 	wg.Add(1)
 	if blobInfo.IsDir() {
 		go ind.readDir(path, wg)
+		t, err := filepath.Abs(filepath.Dir(path))
+		printErr(err)
+		Title = filepath.Base(t)
 	} else {
 		go ind.readFile(path, wg)
+		Title = blobInfo.Name()
 	}
 	wg.Wait()
 	return
