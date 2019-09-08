@@ -11,10 +11,9 @@ h1{
 	font-size: 200%;
 }
 
-#search{
+#searchInput{
 	all:unset;
-	resize: none;
-
+	/* resize: none; */
 	font-size: larger;
 	font-weight: bold;
 	padding: 1ex 2.5ex;
@@ -23,7 +22,7 @@ h1{
 	vertical-align:middle;
 	background: #38383d;
 }
-#search:hover, #search:focus {
+#searchInput:hover, #searchInput:focus {
 	background: #4a4a4f;
 }
 

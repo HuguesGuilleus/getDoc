@@ -4,16 +4,12 @@
 	<meta charset="utf-8">
 	<!--CODE-->
 	<title>Functions et Types</title>
+	<script src="search/search.js" defer charset="utf-8"></script>
 </head>
 <body>
 	<header>
 		<h1>{{ .Title }}</h1>
-		<div id="search" rows="1" cols="80" spellcheck=false>
-			<span class="searchClass">file:</span><span class="searchValue">yolo</span>
-			<span class="searchValue">yolo</span>
-			<span class="searchIgnored">swag</span>
-			<span class="searchActName">$ls:</span><span class="searchActAttr">file</span>
-		</div>
+		<input type="search" id=searchInput placeholder="Search into the page" value="">
 	</header>
 
 	<main id="searchResult" hidden></main>
