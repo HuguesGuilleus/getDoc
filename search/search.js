@@ -27,6 +27,9 @@ function searchParse(input) {
 			cmd:[],
 		}
 		for (let el of input.split(/\s+/)) {
+			if (el === "") {
+				continue
+			}
 			if (el[0] === "$") {
 				let r = el.replace(/\$(\w*).*/, "$1")
 				if (r) {
