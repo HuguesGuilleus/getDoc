@@ -1,0 +1,42 @@
+*[hidden]{
+	display: none !important;
+}
+
+body{
+	margin: 1ex;
+	padding: 0px;
+	color: #b1b1b3;
+	background: #0c0c0d;
+	font-family: sans;
+}
+
+#list{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	column-width: 40ex;
+	column-gap: 1ex ;
+}
+
+#searchFilter{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	column-width: 30ex;
+	column-gap: 1ex ;
+}
+
+.element, .filter{
+	display: block;
+	margin: 1ex 0px ;
+	border-radius: 0.2ex;
+	padding: 1ex;
+	background: #2a2a2e;
+}
+.element:first-of-type, .filter:first-of-type {
+	margin-top: 0px;
+}
+
+.filter:hover{
+	background: #4a4a4f;
+}

@@ -1,0 +1,48 @@
+header{
+	display: grid;
+	grid-template-columns: auto 1fr ;
+	margin: -1ex -1ex 2ex;
+	border-bottom: 0.7ex #737373 solid;
+	background: #2a2a2e ;
+}
+
+h1{
+	padding: 0px 1.5ex 0px 1ex ;
+	font-size: 200%;
+}
+
+#search{
+	all:unset;
+	resize: none;
+
+	font-size: larger;
+	font-weight: bold;
+	padding: 1ex 2.5ex;
+	display:inline-block;
+	line-height:3em;
+	vertical-align:middle;
+	background: #38383d;
+}
+#search:hover, #search:focus {
+	background: #4a4a4f;
+}
+
+.searchClass, .searchActAttr{
+	color: #0a84ff;
+}
+.searchValue{
+	color: #12bc00;
+}
+.searchActName{
+	color: #ad3bff;
+}
+.searchIgnored{
+	color: #737373;
+}
+
+.find{
+	color: #ff9400;
+	background: #712b00;
+	font-style: normal;
+	font-weight: bolder;
+}

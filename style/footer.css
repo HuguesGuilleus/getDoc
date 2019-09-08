@@ -1,0 +1,16 @@
+footer{
+	margin-top: 2ex;
+	text-align: center;
+	font-size: smaller;
+	font-style: italic;
+	color: #737373;
+}
+
+footer em {
+	font-style: normal;
+	font-weight: bold;
+}
+
+footer time {
+	font-style: normal;
+}
