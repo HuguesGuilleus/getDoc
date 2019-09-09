@@ -1,0 +1,24 @@
+.element .fileRef:hover {
+	color: dodgerblue ;
+}
+
+.copied {
+	animation: copiedAnim linear 0.3s running, copiedNothing running 1s 0.3s infinite  ;
+	background: linear-gradient(90deg, #00000000 -50%, dodgerblue);
+	background-position: left ;
+	background-repeat: no-repeat ;
+	background-size: 50%;
+}
+@keyframes copiedAnim {
+	from{
+		background-position: left ;
+	}
+	to {
+		background-position: right ;
+	}
+}
+@keyframes copiedNothing {
+	to,from{
+		background: none ;
+	}
+}
