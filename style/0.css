@@ -10,6 +10,11 @@ body{
 	font-family: sans;
 }
 
+::selection{
+	background: #ffe900;
+	color:black;
+}
+
 #list{
 	display: block;
 	margin: 0px;
