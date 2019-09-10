@@ -43,6 +43,12 @@ body{
 	margin-top: 0px;
 }
 
-.filter:hover{
+.filter:not(.filterActive):hover{
 	background: #4a4a4f;
+	background: #003706;
+}
+
+.filterActive{
+	background: #058b00;
+	color: #003706;
 }

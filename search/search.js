@@ -1,12 +1,42 @@
 // The parsed elements of search
 var arg = null ;
 
+// The ref to the element input#searchInput
+var searchInput = null ;
+
 (function () {
 	searchInput = document.getElementById("searchInput");
+	searchInput.value = "";
 	searchInput.oninput = search ;
 	window.onload = search ;
+	for (let filter of document.querySelectorAll(".filter")) {
+		filter.addEventListener("click",addFilter) ;
+	}
 })();
 
+// The value of searchInput splited
+var searchInputArray = [];
+
+// Add the content of a filter to searchInput
+function addFilter() {
+	var text = this.textContent ;
+	if (!searchInputArray.includes(text)) {
+		this.classList.add("filterActive");
+		searchInput.value += " "+text ;
+		search();
+	}
+}
+
+// Disable filter who are remove from inpustSearch
+function disableFilter() {
+	for (let filter of document.getElementsByClassName("filterActive")) {
+		if (!searchInputArray.includes(filter.textContent)) {
+			filter.classList.remove("filterActive");
+		}
+	}
+}
+
+// Launch the search
 function search() {
 	arg = searchParse(searchInput.value);
 	if (arg === null) {
@@ -16,6 +46,7 @@ function search() {
 	} else {
 		searchElement();
 	}
+	disableFilter();
 }
 
 // The patern for parsing input element
@@ -23,6 +54,7 @@ const searchPattern = /^(?:(\w*):)?(.*)$/ ;
 
 // Parse the string from inout element and return an object
 function searchParse(input) {
+	searchInputArray = input.split(/\s+/) ;
 	if (input.length === 0) {
 		return null
 	} else {
@@ -34,7 +66,7 @@ function searchParse(input) {
 			all:[],
 			cmd:[],
 		}
-		for (let el of input.split(/\s+/)) {
+		for (let el of searchInputArray) {
 			var cat = el.replace(searchPattern, "$1")
 			var val = el.replace(searchPattern, "$2")
 			if (val === "") continue ;
