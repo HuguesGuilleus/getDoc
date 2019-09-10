@@ -70,12 +70,16 @@ function searchParse(input) {
 			var cat = el.replace(searchPattern, "$1")
 			var val = el.replace(searchPattern, "$2")
 			if (val === "") continue ;
-			switch (cat) {
-				case "file":list.file.push(val);break;
-				case "lang":list.lang.push(val);break;
-				case "name":list.name.push(val);break;
-				case "type":list.type.push(val);break;
-				case "":    list.all.push(val);break;
+			if (/\$.+/.test(val)) {
+				list.cmd.push(val.substr(1))
+			} else {
+				switch (cat) {
+					case "file":list.file.push(val);break;
+					case "lang":list.lang.push(val);break;
+					case "name":list.name.push(val);break;
+					case "type":list.type.push(val);break;
+					case "":    list.all.push(val);break;
+				}
 			}
 		}
 		return {
