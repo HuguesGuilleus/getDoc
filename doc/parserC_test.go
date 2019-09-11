@@ -6,12 +6,12 @@ import (
 )
 
 func TestLangC_parse(t *testing.T) {
+	fileName := "aaa.c"
 	t.Run("Function", func(t *testing.T) {
 		index := Index{}
-		fileName := "aaa.c"
 		lines := fileLines{
 			&line{
-				Str:  "// My function por Say Hello World.",
+				Str:  "// My function for Say Hello World.",
 				Type: TYPE_COMMENT,
 			},
 			&line{
@@ -25,7 +25,7 @@ func TestLangC_parse(t *testing.T) {
 			Type:     "func",
 			FileName: fileName,
 			LineNum:  2,
-			Comment:  []string{"My function por Say Hello World."},
+			Comment:  []string{"My function for Say Hello World."},
 			Lang:     "c",
 		}
 		langC_parse(&index, lines, fileName)
@@ -46,8 +46,9 @@ func TestLangC_parse(t *testing.T) {
 			LineNum:  1,
 			Comment:  []string{},
 			Lang:     "c",
+			FileName: fileName,
 		}
-		langC_parse(&index, lines, "")
+		langC_parse(&index, lines, fileName)
 		assert.Equal(t, element, *index[0], "")
 	})
 	t.Run("MacroFunc", func(t *testing.T) {
@@ -65,8 +66,9 @@ func TestLangC_parse(t *testing.T) {
 			LineNum: 1,
 			Comment: []string{},
 			Lang:    "c",
+			FileName: fileName,
 		}
-		langC_parse(&index, lines, "")
+		langC_parse(&index, lines, fileName)
 		assert.Equal(t, element, *index[0], "")
 	})
 	t.Run("TypedefSimple", func(t *testing.T) {
@@ -84,8 +86,9 @@ func TestLangC_parse(t *testing.T) {
 			LineNum:  1,
 			Comment:  []string{},
 			Lang:     "c",
+			FileName: fileName,
 		}
-		langC_parse(&index, lines, "")
+		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
 	t.Run("TypedefMultlines", func(t *testing.T) {
@@ -111,8 +114,9 @@ func TestLangC_parse(t *testing.T) {
 			LineNum:  1,
 			Comment:  []string{},
 			Lang:     "c",
+			FileName: fileName,
 		}
-		langC_parse(&index, lines, "")
+		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
 }

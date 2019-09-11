@@ -2,6 +2,7 @@ package doc
 
 import (
 	"io/ioutil"
+	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -36,6 +37,7 @@ type Index []*Element
 
 // push a element to an Index
 func (ind *Index) push(el *Element) {
+	el.FileName = path.Clean(el.FileName)
 	*ind = append(*ind, el)
 }
 
@@ -96,8 +98,6 @@ func (ind *Index) Date() string {
 // Get the date for humain
 func (_ *Index) HumainDate() string {
 	return time.Now().Format("2006-01-02 15:04:05")
-	// t := time.Now().Format("2006-01-02 15:04:05")
-	// fmt.Sprintf("%d-%d-%d %d:%d:%d", t.Year)
 }
 
 // Get the Title for <h1> in template
