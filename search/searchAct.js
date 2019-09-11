@@ -1,12 +1,21 @@
+// execute the command
 function searchAct() {
 	document.getElementById("std").hidden = true ;
 	document.getElementById("searchResult").hidden = false ;
-	document.getElementById("help").hidden = !arg.cmd.includes("help") ;
-	if (arg.cmd.includes("ls")) {
-		document.getElementById("lsFileArt").hidden = false ;
-		syncList(document.getElementById("lsFileList"), arg.file)
-	} else {
-		document.getElementById("lsFileArt").hidden = true ;
+	document.getElementById("help").hidden = !searchActList.help.length ;
+	searchActLs("File");
+	searchActLs("Lang");
+	searchActLs("Type");
+}
+
+// Hide or not an article of listing
+function searchActLs(Name) {
+	const name = Name.toLowerCase() ;
+	var list = searchActList.ls ;
+	var present = list.includes(name) || list.includes("");
+	document.getElementById("ls"+Name+"Art").hidden = !present ;
+	if (present) {
+		syncList(document.getElementById("ls"+Name+"List"), arg[name])
 	}
 }
 

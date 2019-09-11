@@ -1,3 +1,11 @@
+// The patern for parsing input element of action
+const searchActPattern = /^\$(\w+)(?:\:(.*))?$/ ;
+// The patern for parsing input element of simple search
+const searchElPattern = /^(?:(\w*):)?(.*)$/ ;
+
+// The parsed list of action from the searchInput
+var searchActList = {};
+
 // The parsed elements of search
 var arg = null ;
 
@@ -19,38 +27,43 @@ function search() {
 	arg = searchParse(searchInput.value);
 	if (arg === null) {
 		searchReset();
-	} else if (arg.cmd.length > 0) {
+	} else if (arg.cmd) {
 		searchAct(arg)
 	} else {
 		searchElement();
 	}
 }
 
-// The patern for parsing input element
-const searchPattern = /^(?:(\w*):)?(.*)$/ ;
-
 // Parse the string from inout element and return an object
 function searchParse(input) {
 	searchInputArray = input.split(/\s+/) ;
+	searchActList = {
+		ls:[],
+		help:[],
+	}
 	if (input.length === 0) {
 		return null
 	} else {
+		var cmd = false ;
 		var list = {
 			file:[],
 			lang:[],
 			name:[],
 			type:[],
 			all:[],
-			cmd:[],
 		}
 		for (let el of searchInputArray) {
-			var cat = el.replace(searchPattern, "$1")
-			var val = el.replace(searchPattern, "$2")
-			if (val === "") continue ;
-			if (/\$.+/.test(val)) {
-				list.cmd.push(val.substr(1))
+			if (!el) continue ;
+			if (el[0] === "$") {
+				let cat = el.replace(searchActPattern, "$1");
+				let val = el.replace(searchActPattern, "$2");
+				if (searchActList[cat]) {
+					searchActList[cat].push(val) ;
+					cmd = true ;
+				}
 			} else {
-				switch (cat) {
+				let val = el.replace(searchElPattern, "$2");
+				switch (el.replace(searchElPattern, "$1")) {
 					case "file":list.file.push(val);break;
 					case "lang":list.lang.push(val);break;
 					case "name":list.name.push(val);break;
@@ -60,7 +73,7 @@ function searchParse(input) {
 			}
 		}
 		return {
-			cmd: list.cmd,
+			cmd: cmd,
 			file: {
 				pat: new RegExp("("+list.file.concat(list.all).join("|")+")", "gui"),
 				notFound: list.file.length ,
