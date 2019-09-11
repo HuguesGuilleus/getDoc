@@ -46,15 +46,40 @@ func (ind Index) ListFile() (files []string) {
 	for _, el := range ind {
 		all = append(all, el.FileName)
 	}
-	sort.Strings(all)
+	return uniq(all)
+}
+
+// List all file who have an element of the list.
+// The return list are sorted and all file are uniq
+func (ind Index) ListType() (files []string) {
+	all := []string{}
+	for _, el := range ind {
+		all = append(all, el.Type)
+	}
+	return uniq(all)
+}
+
+// List all file who have an element of the list.
+// The return list are sorted and all file are uniq
+func (ind Index) ListLang() (out []string) {
+	all := []string{}
+	for _, el := range ind {
+		all = append(all, el.Lang)
+	}
+	return uniq(all)
+}
+
+// Sort and remove double string
+func uniq(in []string) (out []string) {
+	sort.Strings(in)
 	last := ""
-	for _, file := range all {
-		if last != file {
-			files = append(files, file)
-			last = file
+	for _, item := range in {
+		if item != last {
+			out = append(out, item)
+			last = item
 		}
 	}
-	return
+	return out
 }
 
 // Get the time of the parse for use with JSON

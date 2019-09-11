@@ -26,12 +26,20 @@
 
 		<article id=lsLangArt hidden>
 			<h2>Language</h2>
-			<ul id=lsLangList></ul>
+			<ul id=lsLangList>
+				{{- range .ListLang }}
+				<li class="lsItem">{{.}}</li>
+				{{- end }}
+			</ul>
 		</article>
 
 		<article id=lsTypeArt hidden>
 			<h2>Type</h2>
-			<ul id=lsTypeAr></ul>
+			<ul id=lsTypeAr>
+				{{- range .ListType }}
+				<li class="lsItem">{{.}}</li>
+				{{- end }}
+			</ul>
 		</article>
 
 		<article id=help hidden>
