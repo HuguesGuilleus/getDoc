@@ -4,7 +4,6 @@ import (
 	"./data"
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -32,12 +31,14 @@ func (ind *Index) saveHTMLinDir(path string) {
 // Save the doc in path
 func (ind *Index) saveHTMLinFile(path string) {
 	if ind == nil {
-		fmt.Fprintln(os.Stderr, "The index is null")
+		printErr("The index is null")
 		return
 	}
+	ind.sort()
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0664)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		printErr(err)
+		return
 	}
 	defer file.Close()
 	err = data.Index.Execute(file, ind)
@@ -57,6 +58,7 @@ type DataIndex struct {
 
 // Cast Index to DataIndex
 func (ind *Index) DataIndex() *DataIndex {
+	ind.sort()
 	return &DataIndex{
 		List:  *ind,
 		Files: ind.ListFile(),

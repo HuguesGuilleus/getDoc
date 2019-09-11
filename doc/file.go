@@ -41,6 +41,13 @@ func (ind *Index) push(el *Element) {
 	*ind = append(*ind, el)
 }
 
+// Sort the Index of element by the Name
+func (ind Index) sort() {
+	sort.Slice(ind, func (i,j int) bool {
+		return ind[i].Name < ind[j].Name
+	})
+}
+
 // List all file who have an element of the list.
 // The return list are sorted and all file are uniq
 func (ind Index) ListFile() (files []string) {
