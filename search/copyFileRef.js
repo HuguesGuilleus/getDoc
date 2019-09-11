@@ -1,8 +1,8 @@
-(function () {
+document.addEventListener("DOMContentLoaded",()=>{
 	for (let item of document.querySelectorAll(".element .fileRef")) {
-		item.addEventListener("click",copy)
+		item.addEventListener("click",copy);
 	}
-})();
+});
 
 function copy() {
 	var text = this.textContent ;
@@ -14,8 +14,8 @@ function copy() {
 	input.select();
 	document.execCommand("copy");
 	input.remove();
-	this.classList.add("copied")
+	this.classList.add("copied");
 	setTimeout(()=>{
-		this.classList.remove("copied")
+		this.classList.remove("copied");
 	},500);
 }

@@ -15,12 +15,12 @@ var searchInputArray = [];
 // The ref to the element input#searchInput
 var searchInput = null ;
 
-(function () {
+document.addEventListener("DOMContentLoaded",()=>{
 	searchInput = document.getElementById("searchInput");
 	searchInput.value = "";
 	searchInput.oninput = search ;
 	window.onload = search ;
-})();
+});
 
 // Launch the search
 function search() {
@@ -40,7 +40,7 @@ function searchParse(input) {
 	searchActList = {
 		ls:[],
 		help:[],
-	}
+	};
 	if (input.length === 0) {
 		return null
 	} else {
@@ -51,7 +51,7 @@ function searchParse(input) {
 			name:[],
 			type:[],
 			all:[],
-		}
+		};
 		for (let el of searchInputArray) {
 			if (!el) continue ;
 			if (el[0] === "$") {
@@ -60,7 +60,7 @@ function searchParse(input) {
 				if (searchActList[cat]) {
 					searchActList[cat].push(val) ;
 					cmd = true ;
-				}
+				};
 			} else {
 				let val = el.replace(searchElPattern, "$2");
 				switch (el.replace(searchElPattern, "$1")) {
@@ -90,7 +90,7 @@ function searchParse(input) {
 				pat: new RegExp("("+list.type.concat(list.all).join("|")+")", "gui"),
 				notFound: list.type.length ,
 			},
-		}
+		};
 	}
 }
 
@@ -134,9 +134,9 @@ function searchElement() {
 function searchMatch(el, finder ) {
 	if (finder.pat.test(el.textContent)) {
 		el.innerHTML = el.textContent.replace(finder.pat,'<span class=find>$1</span>');
-		return 1
+		return 1 ;
 	} else {
-		searchResetElement(el)
+		searchResetElement(el);
 		return -10 * finder.notFound ;
 	}
 }
