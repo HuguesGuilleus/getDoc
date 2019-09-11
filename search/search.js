@@ -1,6 +1,9 @@
 // The parsed elements of search
 var arg = null ;
 
+// The value of searchInput splited
+var searchInputArray = [];
+
 // The ref to the element input#searchInput
 var searchInput = null ;
 
@@ -9,32 +12,7 @@ var searchInput = null ;
 	searchInput.value = "";
 	searchInput.oninput = search ;
 	window.onload = search ;
-	for (let filter of document.querySelectorAll(".filter")) {
-		filter.addEventListener("click",addFilter) ;
-	}
 })();
-
-// The value of searchInput splited
-var searchInputArray = [];
-
-// Add the content of a filter to searchInput
-function addFilter() {
-	var text = this.textContent ;
-	if (!searchInputArray.includes(text)) {
-		this.classList.add("filterActive");
-		searchInput.value += " "+text ;
-		search();
-	}
-}
-
-// Disable filter who are remove from inpustSearch
-function disableFilter() {
-	for (let filter of document.getElementsByClassName("filterActive")) {
-		if (!searchInputArray.includes(filter.textContent)) {
-			filter.classList.remove("filterActive");
-		}
-	}
-}
 
 // Launch the search
 function search() {
@@ -46,7 +24,6 @@ function search() {
 	} else {
 		searchElement();
 	}
-	disableFilter();
 }
 
 // The patern for parsing input element
@@ -104,10 +81,6 @@ function searchParse(input) {
 	}
 }
 
-function searchAct() {
-	console.log("searchAct");
-}
-
 // Reset the search
 function searchReset() {
 	document.getElementById("std").hidden = false ;
@@ -146,11 +119,11 @@ function searchElement() {
 // It return -10 if the tab if not empty and the pattern not found,
 // return 1 if there are a match, and return 0 if tab is empty and not found
 function searchMatch(el, finder ) {
-	searchResetElement(el)
 	if (finder.pat.test(el.textContent)) {
 		el.innerHTML = el.textContent.replace(finder.pat,'<span class=find>$1</span>');
 		return 1
 	} else {
+		searchResetElement(el)
 		return -10 * finder.notFound ;
 	}
 }

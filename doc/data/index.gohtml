@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<!--CODE-->
 	<title>Functions et Types</title>
+	<!--CODE-->
 	<script src="search/search.js" defer charset="utf-8"></script>
 	<script src="search/copyFileRef.js" defer charset="utf-8"></script>
-	<link rel="stylesheet" href="style/copy.css">
+	<script src="search/searchAct.js" defer charset="utf-8"></script>
 </head>
 <body>
 	<header>
@@ -14,7 +14,35 @@
 		<input type="search" id=searchInput placeholder="Search into the page" value="">
 	</header>
 
-	<main id="searchResult" hidden></main>
+	<main id="searchResult" hidden>
+		<article id=lsFileArt>
+			<h2>File</h2>
+			<ul id=lsFileList>
+				{{- range .ListFile }}
+				<li class="lsItem">{{.}}</li>
+				{{- end }}
+			</ul>
+		</article>
+
+		<article id=lsLangArt hidden>
+			<h2>Language</h2>
+			<ul id=lsLangList></ul>
+		</article>
+
+		<article id=lsTypeArt hidden>
+			<h2>Type</h2>
+			<ul id=lsTypeAr></ul>
+		</article>
+
+		<article id=help hidden>
+			<h2>Help</h2>
+			<dl>
+				<dt>&lt;noting&gt;</dt><dd>Affiche les éléments et les filters</dd>
+				<dt>$ls</dt><dd>Liste les fichiers/...</dd>
+				<dt>$help</dt><dd>Affiche ces aides</dd>
+			</dl>
+		</article>
+	</main>
 
 	<main id="std">
 		<ul id="list">
@@ -30,13 +58,6 @@
 				<p class="comment">{{.}}</p>
 				{{- end }}
 			</li>
-			{{- end }}
-		</ul>
-
-		<h2>Search Filters</h2>
-		<ul id="searchFilter">
-			{{- range .ListFile }}
-			<li class="filter">file:{{.}}</li>
 			{{- end }}
 		</ul>
 	</main>
