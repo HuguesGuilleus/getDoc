@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded",()=>{
-	for (let item of document.querySelectorAll(".element .fileRef")) {
+	for (let item of document.querySelectorAll(".fileRef")) {
 		item.addEventListener("click",copy);
 	}
 });
