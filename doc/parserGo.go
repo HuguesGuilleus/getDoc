@@ -4,8 +4,6 @@ import (
 	"regexp"
 )
 
-// TODO: search many variable def in the same line
-
 var (
 	langGo_comment        = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
 	langGo_func           = regexp.MustCompile("^(func\\s+(?:\\(.*\\)\\s+)?\\w+\\(.*\\))\\s+{")
@@ -16,7 +14,7 @@ var (
 	langGo_varBegin       = regexp.MustCompile("^var\\s+\\(\\s*")
 	langGo_constBegin     = regexp.MustCompile("^const\\s+\\(\\s*")
 	langGo_varConstMiddle = regexp.MustCompile("\\s*\\w+.*")
-	langGo_varConstEnd    = regexp.MustCompile("\\s*\\)\\s*")
+	langGo_varConstEnd    = regexp.MustCompile("^\\s*\\)\\s*$")
 	langGo_Name           = regexp.MustCompile("\\s*(?:type|var|const)?\\s*(\\w+).*")
 	langGo_Space          = regexp.MustCompile("^\\s*(.*)\\s*$")
 )
