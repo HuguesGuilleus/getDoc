@@ -3,15 +3,19 @@ main#searchResult{
 	margin: 0px 10ex 2ex ;
 }
 
-ul.searchResult{
-	display: block;
-	margin: 0px;
+main#searchResult article ul {
+	column-width: 20ex;
 	padding: 0px;
-	column-width: 30ex;
-	column-gap: 1ex ;
 }
 
-li.searchResult{
-	display: block;
-	margin: 0px;
+.lsItem{
+	list-style: "";
+}
+.lsItem:hover{
+	color: #d76e00;
+}
+
+
+dt{
+	font-weight: bold;
 }
