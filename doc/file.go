@@ -43,7 +43,7 @@ func (ind *Index) push(el *Element) {
 
 // Sort the Index of element by the Name
 func (ind Index) sort() {
-	sort.Slice(ind, func (i,j int) bool {
+	sort.Slice(ind, func(i, j int) bool {
 		return ind[i].Name < ind[j].Name
 	})
 }

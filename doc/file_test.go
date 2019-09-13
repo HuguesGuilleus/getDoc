@@ -8,7 +8,7 @@ import (
 func TestIndexPush(t *testing.T) {
 	ind := &Index{}
 	el := &Element{
-		Name: "yolo",
+		Name:     "yolo",
 		FileName: "./swag/yolo.c",
 	}
 	ind.push(el)

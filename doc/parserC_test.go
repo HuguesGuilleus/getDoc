@@ -62,10 +62,10 @@ func TestLangC_parse(t *testing.T) {
 		element := Element{
 			Name: "ERR",
 			LineName: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
-			Type:    "macroFunc",
-			LineNum: 1,
-			Comment: []string{},
-			Lang:    "c",
+			Type:     "macroFunc",
+			LineNum:  1,
+			Comment:  []string{},
+			Lang:     "c",
 			FileName: fileName,
 		}
 		langC_parse(&index, lines, fileName)
