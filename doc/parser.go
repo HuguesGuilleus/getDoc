@@ -20,10 +20,12 @@ const (
 type parserFunc func(index *Index, lines fileLines, fileName string)
 
 var parserList = map[string]parserFunc{
-	"c":  langC_parse,
-	"h":  langC_parse,
-	"js": langJs_parse,
-	"go": langGo_parse,
+	"c":    langC_parse,
+	"h":    langC_parse,
+	"js":   langJs_parse,
+	"go":   langGo_parse,
+	"sh":   langBash_parse,
+	"bash": langBash_parse,
 }
 
 // Simple secure for the list
