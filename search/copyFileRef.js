@@ -1,3 +1,7 @@
+// getDoc
+// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// BSD 3-Clause "New" or "Revised" License
+
 document.addEventListener("DOMContentLoaded",()=>{
 	for (let item of document.querySelectorAll(".fileRef")) {
 		item.addEventListener("click",copy);

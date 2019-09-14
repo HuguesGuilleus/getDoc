@@ -1,3 +1,7 @@
+/* getDoc
+2019 GUILLEUS Hugues <ghugues@netc.fr>
+BSD 3-Clause "New" or "Revised" License */
+
 header{
 	display: grid;
 	grid-template-columns: auto 1fr ;

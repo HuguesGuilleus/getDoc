@@ -1,3 +1,7 @@
+// getDoc
+// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// BSD 3-Clause "New" or "Revised" License
+
 // execute the command
 function searchAct() {
 	document.getElementById("std").hidden = true ;

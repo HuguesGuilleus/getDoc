@@ -1,3 +1,7 @@
+// getDoc
+// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// BSD 3-Clause "New" or "Revised" License
+
 // The patern for parsing input element of action
 const searchActPattern = /^\$(\w+)(?:\:(.*))?$/ ;
 // The patern for parsing input element of simple search
