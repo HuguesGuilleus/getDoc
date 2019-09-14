@@ -7,8 +7,6 @@ layout: default
 	BSD 3-Clause "New" or "Revised" License
 {%- endcomment -%}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 	svg.octicon{
 		height: 1em !important;
