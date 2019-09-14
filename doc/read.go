@@ -14,6 +14,8 @@ func Read(root string) (ind *Index) {
 	ind = &Index{}
 	wg := &sync.WaitGroup{}
 	defer wg.Wait()
+	wg.Add(1)
+	go getTitle(root, wg)
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		defer rec()
 		panicing(err)
@@ -35,6 +37,14 @@ func (ind *Index) readFile(path string, wg *sync.WaitGroup) {
 		log.Print("READ FILE: ", path)
 		parser(ind, splitFile(path), path)
 	}
+}
+
+// Get the name of the file or directory
+func getTitle(path string, wg *sync.WaitGroup)  {
+	defer wg.Done()
+	path, err := filepath.Abs(path)
+	printErr(err)
+	Title = filepath.Base(path)
 }
 
 // recover and print the error
