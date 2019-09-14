@@ -1,0 +1,11 @@
+gems:
+- jekyll-octicons
+- jekyll-github-metadata
+- jekyll-mentions
+- jekyll-redirect-from
+- jekyll-sitemap
+
+defaults:
+  -
+    values:
+      layout: "chapter"

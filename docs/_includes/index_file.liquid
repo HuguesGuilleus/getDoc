@@ -1,0 +1,14 @@
+{%- comment -%}
+	2019 GUILLEUS Hugues <ghugues@netc.fr>
+	BSD 3-Clause "New" or "Revised" License
+{%- endcomment -%}
+
+{%- assign pageLang = page.path | split: '/' | first -%}
+<ul>
+  {%- for file in site.pages -%}
+  {%- assign fileLang = file.path | split: '/' | first -%}
+    {%- if fileLang == pageLang %}
+      <li><a href="{{file.name|remove:".md"}}">{{file.title}}</a></li>
+    {%- endif -%}
+  {%- endfor %}
+</ul>

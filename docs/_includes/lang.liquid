@@ -1,0 +1,39 @@
+{%- comment -%}
+	2019 GUILLEUS Hugues <ghugues@netc.fr>
+	BSD 3-Clause "New" or "Revised" License
+{%- endcomment -%}
+
+{%- assign pageLang = page.path | split: '/' | first -%}
+{%- assign langList = "fr:Français/en:English" | split: '/' -%}
+
+<div id=langList>
+	{%- case pageLang -%}
+		{%- when "fr" -%}
+			Langue&thinsp;:
+		{%- when "en" -%}
+			Language:
+		{%- else -%}
+			{{pageLang}}???
+	{%- endcase -%}
+	{%- for lang in langList -%}
+		{%- assign langCode = lang | split: ":" | first -%}
+		{%- assign langName = lang | split: ":" | last -%}
+		{%- if langCode == pageLang -%}
+			<span>{{ langName }}</span>
+		{%- else condition -%}
+			<a href="../{{langCode}}/{{page.name | remove: ".md" }}">{{langName}}</a>
+		{%- endif -%}
+	{%- endfor -%}
+</div>
+
+<style>
+	#langList{
+		display:grid;
+		grid-template-columns: 1fr repeat({{langList|size}},auto);
+		grid-gap:1ex;
+		border-radius:0.6ex;
+		padding:0.5ex 0ex;
+		font-size: smaller;
+		margin-bottom: 4ex;
+	}
+</style>
