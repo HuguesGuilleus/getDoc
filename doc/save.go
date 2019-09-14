@@ -57,7 +57,7 @@ func (ind *DataIndex) Xml(path string) {
 	defer file.Close()
 	_, e = file.Write(data)
 	panicing(e)
-	log.Print("SAVE IN XML: ", file.Name() )
+	log.Print("SAVE IN XML: ", file.Name())
 }
 
 // Open a file for writing
