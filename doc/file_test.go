@@ -9,14 +9,12 @@ func TestIndexPush(t *testing.T) {
 	ind := &Index{}
 	el := &Element{
 		Name:     "yolo",
-		FileName: "./swag/yolo.c",
 	}
 	ind.push(el)
-	assert.Equal(t, 1, len(*ind), "length must 1")
+	assert.Equal(t, 1, len(*ind), "length of the index must be one 1")
 	if len(*ind) == 1 {
 		assert.Equal(t, el, (*ind)[0], "The first Element")
 	}
-	assert.Equal(t, "swag/yolo.c", el.FileName, "FileName clean")
 }
 
 func TestListFile(t *testing.T) {

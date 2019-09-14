@@ -2,7 +2,6 @@ package doc
 
 import (
 	"io/ioutil"
-	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -37,7 +36,6 @@ type Index []*Element
 
 // push a element to an Index
 func (ind *Index) push(el *Element) {
-	el.FileName = path.Clean(el.FileName)
 	*ind = append(*ind, el)
 }
 
