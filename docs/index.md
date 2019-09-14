@@ -8,12 +8,19 @@ Choose a language /// Choisi une langue
 - [English](en/)
 
 <script>
-	switch (navigator.language) {
-		case "fr":
-			document.location.href="fr/"
-			break;
-		case "en":
-		default:
-			document.location.href="en/"
-	}
+	(function () {
+		for (let lang of navigator.languages) {
+			switch (lang) {
+				case "fr":
+				case "fr-FR":
+					document.location.href="fr/";
+					return ;
+				case "en":
+				case "en-US":
+					document.location.href="en/";
+					return ;
+			}
+		}
+		document.location.href="en/";
+	})();
 </script>
