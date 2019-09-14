@@ -72,6 +72,13 @@ func rec() {
 	printErr(err)
 }
 
+// Panic if error is not nil
+func panicing(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 // Print a error in os.Stderr with red
 func printErr(err interface{}) {
 	if err != nil {

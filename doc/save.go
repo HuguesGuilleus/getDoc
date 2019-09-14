@@ -4,49 +4,19 @@ import (
 	"./data"
 	"encoding/json"
 	"encoding/xml"
-	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // Save the index in a a file in html
 func (ind *Index) SaveHTML(path string) {
-	blobInfo, err := os.Stat(path)
-	if err == nil && blobInfo.IsDir() {
-		ind.saveHTMLinDir(path)
-	} else {
-		ind.saveHTMLinFile(path)
-	}
-}
-
-// Save the doc in path(who are a directory)
-func (ind *Index) saveHTMLinDir(path string) {
-	if path[len(path)-1] == '/' {
-		ind.saveHTMLinFile(path + "doc.html")
-	} else {
-		ind.saveHTMLinFile(path + "/doc.html")
-	}
-}
-
-// Save the doc in path
-func (ind *Index) saveHTMLinFile(path string) {
-	if ind == nil {
-		printErr("The index is null")
-		return
-	}
+	defer rec()
 	ind.sort()
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0664)
-	if err != nil {
-		printErr(err)
-		return
-	}
+	file := writeFile(path, "doc.html")
 	defer file.Close()
-	err = data.Index.Execute(file, ind)
-	if err != nil {
-		printErr(err)
-		return
-	}
-	log.Print("SAVE IN HTML: ", path)
+	panicing(data.Index.Execute(file, ind))
+	log.Print("SAVE IN HTML: ", file.Name())
 }
 
 // The index for XML and JSON encoding
@@ -67,35 +37,50 @@ func (ind *Index) DataIndex() *DataIndex {
 }
 
 // Save the data in a file in JSON encoding
-// path must be a file not a directory
-func (ind *DataIndex) Json(path string) (err bool) {
+func (ind *DataIndex) Json(path string) {
+	defer rec()
 	data, e := json.MarshalIndent(*ind, "", "\t")
-	if e != nil {
-		printErr(e)
-		return true
-	}
-	e = ioutil.WriteFile(path, data, 0664)
-	if e != nil {
-		printErr(e)
-		return true
-	}
-	log.Print("SAVE IN JSON: ", path)
-	return false
+	panicing(e)
+	file := writeFile(path, "doc.json")
+	defer file.Close()
+	_, e = file.Write(data)
+	panicing(e)
+	log.Print("SAVE IN JSON: ", file.Name())
 }
 
 // Save the data in a file in JSON encoding
-// path must be a file not a directory
-func (ind *DataIndex) Xml(path string) (err bool) {
+func (ind *DataIndex) Xml(path string) {
+	defer rec()
 	data, e := xml.MarshalIndent(*ind, "", "\t")
-	if e != nil {
-		printErr(e)
-		return true
+	panicing(e)
+	file := writeFile(path, "doc.xml")
+	defer file.Close()
+	_, e = file.Write(data)
+	panicing(e)
+	log.Print("SAVE IN XML: ", file.Name() )
+}
+
+// Open a file for writing
+// If path is a directory, the file is path+name else if just path
+// It panic with error
+func writeFile(path, name string) *os.File {
+	if len(name) == 0 {
+		panic("writeFile: you must give non empty string for name")
 	}
-	e = ioutil.WriteFile(path, data, 0664)
-	if e != nil {
-		printErr(e)
-		return true
+	if len(path) == 0 {
+		path = name
+	} else {
+		blobInfo, err := os.Stat(path)
+		if err == nil && blobInfo.IsDir() {
+			if path[len(path)-1] == '/' {
+				path += name
+			} else {
+				path += "/" + name
+			}
+		}
 	}
-	log.Print("SAVE IN XML: ", path)
-	return false
+	path = filepath.Clean(path)
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0664)
+	panicing(err)
+	return file
 }
