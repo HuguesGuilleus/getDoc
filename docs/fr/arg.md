@@ -24,6 +24,7 @@ Notons que l'on peut indiquer plusieurs formats et plusieurs sorties pour chacun
 
 
 ## Drapeaux Généraux
+
 | Drapeau short  | Drapeau long   | Description                                         |
 | :------------- | :------------- | :-------------------------------------------------- |
 | `-l`           | `--lang`       | Liste les langages supportés et quitte le programme |

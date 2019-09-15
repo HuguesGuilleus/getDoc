@@ -23,6 +23,7 @@ To generate XML, use `-x` or `--xml` option and the name of the file or director
 
 
 ## General flags
+
 | Short Flags | Long Flags  | Description                        |
 | :---------- | :---------- | :--------------------------------- |
 | `-l`        | `--lang`    | List supported languages and exit. |
