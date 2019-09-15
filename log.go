@@ -9,7 +9,7 @@ import (
 )
 
 // A io.Writer who d'ont have effect
-type emptyWriter struct {}
+type emptyWriter struct{}
 
 func (*emptyWriter) Write(data []byte) (int, error) {
 	return len(data), nil

@@ -14,8 +14,8 @@ import (
 
 var spec = &parseOpt.SpecList{
 	&parseOpt.Spec{
-		NameLong:  "version",
-		Desc:      "Print the version",
+		NameLong: "version",
+		Desc:     "Print the version",
 		CBFlag: func() {
 			fmt.Printf("getDoc VERSION: %.2f\n", 1.02)
 			fmt.Println("  BSD 3-Clause License")
