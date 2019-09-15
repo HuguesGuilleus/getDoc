@@ -16,7 +16,7 @@ func (*emptyWriter) Write(data []byte) (int, error) {
 }
 
 func init() {
-	log.SetPrefix("==== ")
+	log.SetPrefix("--- ")
 	log.SetFlags(0)
 	log.SetOutput(&emptyWriter{})
 }

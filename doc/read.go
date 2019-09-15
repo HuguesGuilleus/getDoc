@@ -74,7 +74,7 @@ func printErr(err interface{}) {
 		// Prefix
 		oldPrefix := log.Prefix()
 		defer log.SetPrefix(oldPrefix)
-		log.SetPrefix("\033[01;31m" + oldPrefix)
+		log.SetPrefix("\033[01;31m=== ")
 		// print
 		log.Print("ERROR: ", err, "\033[0m")
 	}
