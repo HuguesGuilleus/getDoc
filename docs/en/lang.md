@@ -4,7 +4,7 @@ title: Supported languages
 
 `getDoc` split every line, give a type with regular expression and select it. It's required a minimum of indentation.
 
-Furthermore, this programm is limited to global object.
+Furthermore, this program is limited to global object.
 
 
 ## Comment
@@ -12,7 +12,7 @@ This documentation system provides the go language. The documentation is in comm
 ```c
 // A first paragraph.
 //
-// This macro constant is just for example. You sould no use
+// This macro constant is just for example. You should no use
 // in reel project. Isn't it children?
 #define YOLO "yolo!"
 ```
@@ -28,7 +28,7 @@ More than two slash are also supported: `//`
 - The macro function (`macroFunc`) and constant (`macroConst`)
 
 ### No supported elements:
-- global varibale
+- global variable
 
 
 ## Go
