@@ -18,19 +18,43 @@ This documentation system provides the go language. The documentation is in comm
 ```
 
 
+## Bash
+### Comment supported for documentation
+One or more hash: `#` (The shebang are ignored)
+
+### Supported element:
+- Function (global) (`func`)
+- Global Variable
+
+
 ## C
 ### Comment supported for documentation
 More than two slash are also supported: `//`
 
-### Supported elements:
+### Supported element:
 - Function (global) (`func`)
 - Type (`type`)
 - The macro function (`macroFunc`) and constant (`macroConst`)
 
-### No supported elements:
-- global variable
+### No supported element:
+- Global variable
 
 
 ## Go
+### Comment supported for documentation
+More than two slash are also supported: `//`
+
+### Supported element:
+- Function (global) (`func`)
+- Type (`type`)
+- Global variable and constant
+
+
 ## Javascript
-## Bash
+### Comment supported for documentation
+More than two slash are also supported: `//`
+
+### Supported element:
+- Function (global) (`func`)
+- Class (`class`)
+- Global variable and constant

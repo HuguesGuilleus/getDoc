@@ -19,10 +19,19 @@ Ce système de documentation vient du langage Go. La documentation est écrit da
 ```
 
 
+## Bash
+### Commentaire supporté pour la documentation
+Un ou plusieurs croisillons: `#` (Le *shebang* est ignoré)
+
+### Pris en charge:
+- Fonction (globale) (`func`)
+- Variable et constante globale
+
+
 ## C
 ### Commentaire supporté pour la documentation
-
 Deux barres obliques ou plus: `//`
+
 ### Pris en charge:
 - Fonction (globale) (`func`)
 - Type (`type`)
@@ -33,5 +42,20 @@ Deux barres obliques ou plus: `//`
 
 
 ## Go
+### Commentaire supporté pour la documentation
+Deux barres obliques ou plus: `//`
+
+### Pris en charge:
+- Fonction (globale) (`func`)
+- Type (`type`)
+- Variable et constante globale
+
+
 ## Javascript
-## Bash
+### Commentaire supporté pour la documentation
+Deux barres obliques ou plus: `//`
+
+### Pris en charge:
+- Fonction (globale) (`func`)
+- Classe (`class`)
+- Variable et constante globale
