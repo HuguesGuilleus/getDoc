@@ -20,29 +20,12 @@ layout: default
 		height: 1em !important;
 		width: 1em !important;
 	}
-	#betaTag{
-		background: #ff9400;
-		color:#3e1300;
-		padding: 0.3ex 1ex  ;
-		font-size:60%;
-		display: inline-block;
-		border-radius: 0.5ex;
-		margin-left: 2em;
-	}
-	#betaTag path {
-		stroke:#3e1300;
-		fill:#3e1300;
-		stroke-width: 0.1;
-	}
 </style>
 
 {% if page.path != "index.md" %}
 <h1>
 	<a href="./">{{remote}}</a>&nbsp;/
 	{{page.title}}
-	<span id=betaTag>
-		{% octicon beaker %} Beta Doc
-	</span>
 </h1>
 {% include lang.liquid %}
 {%- endif %}
