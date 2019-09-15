@@ -14,11 +14,11 @@ import (
 
 var spec = &parseOpt.SpecList{
 	&parseOpt.Spec{
-		NameShort: "v",
 		NameLong:  "version",
 		Desc:      "Print the version",
 		CBFlag: func() {
-			log.Printf("VERSION: %.2f\n", 1.02)
+			fmt.Printf("getDoc VERSION: %.2f\n", 1.02)
+			fmt.Println("  BSD 3-Clause License")
 			os.Exit(0)
 		},
 	},
@@ -33,6 +33,14 @@ var spec = &parseOpt.SpecList{
 			}
 			fmt.Println("  More datail on Github")
 			os.Exit(0)
+		},
+	},
+	&parseOpt.Spec{
+		NameShort: "v",
+		NameLong:  "verbose",
+		Desc:      "Verbose Mode",
+		CBFlag: func() {
+			log.SetOutput(os.Stdout)
 		},
 	},
 	&parseOpt.Spec{
@@ -56,12 +64,6 @@ var spec = &parseOpt.SpecList{
 		Desc:       "Set xml output file",
 		NeedArg:    true,
 	},
-}
-
-func init() {
-	log.SetPrefix("==== ")
-	log.SetFlags(0)
-	log.SetOutput(os.Stdout)
 }
 
 func main() {
