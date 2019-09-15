@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 	for (let item of document.querySelectorAll(".fileRef")) {
 		item.addEventListener("click",copy);
 	}
-});
+},{once:true,});
 
 function copy() {
 	var text = this.textContent ;

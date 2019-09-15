@@ -23,8 +23,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 	searchInput = document.getElementById("searchInput");
 	searchInput.value = "";
 	searchInput.oninput = search ;
-	window.onload = search ;
-});
+},{once:true,});
 
 // Launch the search
 function search() {
