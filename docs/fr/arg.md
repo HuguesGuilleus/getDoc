@@ -1,5 +1,5 @@
 ---
-title: Arguments
+title: Arguments passé en ligne de commande
 ---
 
 Pour récupérer la documentation sur des fichiers spécifiques, il suffit de les passer directement arguments. Cela peut-être des fichiers ou des répertoires. Par défaut c'est le répertoire courant.

@@ -1,5 +1,5 @@
 ---
-title: Recherche
+title: Recherche dans la page web générée
 ---
 
 Vous pouvez rechercher des chaînes de caractères séparées par des espaces. Les éléments dont aucun motif n'a été trouvé seront masqués. Vous pouvez rechercher dans une catégorie spécifique avec `catégorie:motif` ou dans toutes les catégories avec `motif`. Les catégories sont:

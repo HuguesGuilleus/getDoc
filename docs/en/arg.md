@@ -1,5 +1,5 @@
 ---
-title: Arguments
+title: Arguments of command line
 ---
 
 To get the documentation of specific files, you need to pass it in argument of the program. It's can be a regular file or a directory. By default is the current directory.

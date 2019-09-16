@@ -1,5 +1,5 @@
 ---
-title: Search
+title: Search into generated web page
 ---
 
 You can search strings separate by space. The item without search pattern are hidden. You can search a secific category with `category:pattern` or in all categorys with `pattern`. The categorys are:
