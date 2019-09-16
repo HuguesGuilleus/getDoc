@@ -29,7 +29,8 @@ body{
 
 .element, .filter{
 	display: block;
-	margin: 1ex 0px ;
+	/* margin: 1ex 0px ; */
+	margin: 0px 0px 1ex ;
 	border-radius: 0.2ex;
 	padding: 1ex;
 	background: #2a2a2e;

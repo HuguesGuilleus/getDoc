@@ -2,7 +2,7 @@
 2019 GUILLEUS Hugues <ghugues@netc.fr>
 BSD 3-Clause "New" or "Revised" License */
 
-.element .fileRef:hover {
+.element .fileRef:hover, .lsItem.fileRef:hover {
 	color: dodgerblue ;
 }
 
