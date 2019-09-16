@@ -21,7 +21,6 @@ Example: list the files
 $ls:file
 ```
 
+
 ## Help
 You can display the help with: `$help`
-
-*Note: in the actual version, the help is ion French. It's will be fixed quickly*

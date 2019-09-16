@@ -24,5 +24,3 @@ $ls:file
 
 ## Aide
 Pour afficher l'aide: `$help`
-
-*Note: dans la version actuelle, l'aide est uniquement en Français. Cela sera corrigé rapidement.*
