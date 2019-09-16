@@ -15,8 +15,8 @@ function searchAct() {
 // Hide or not an article of listing
 function searchActLs(Name) {
 	const name = Name.toLowerCase() ;
-	var list = searchActList.ls ;
-	var present = list.includes(name) || list.includes("");
+	var present = searchActList.ls.includes("")
+		|| searchActList.ls.includes(name) ;
 	document.getElementById("ls"+Name+"Art").hidden = !present ;
 	if (present) {
 		syncList(document.getElementById("ls"+Name+"List"), arg[name])
@@ -25,16 +25,7 @@ function searchActLs(Name) {
 
 // Synchonise a DOM list and a Js array
 function syncList(ul,pat) {
-	for (let li of ul.querySelectorAll("li")) {
+	for (let li of ul.getElementsByTagName("li")) {
 		li.hidden = searchMatch(li,pat) < 1 ;
-	}
-}
-
-// Generate the list item for a Js array
-function genList(ul, tab) {
-	for (let item of tab) {
-		let li = document.createElement("li");
-		li.textContent = item ;
-		ul.appendChild(li) ;
 	}
 }

@@ -3,7 +3,7 @@
 // BSD 3-Clause "New" or "Revised" License
 
 document.addEventListener("DOMContentLoaded",()=>{
-	for (let item of document.querySelectorAll(".fileRef")) {
+	for (let item of document.getElementsByClassName("fileRef")) {
 		item.addEventListener("click",copy);
 	}
 },{once:true,});

@@ -27,13 +27,15 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 // Launch the search
 function search() {
-	arg = searchParse(searchInput.value);
-	if (arg === null) {
-		searchReset();
-	} else if (arg.cmd) {
-		searchAct(arg)
+	if (searchInput.value) {
+		arg = searchParse(searchInput.value);
+		if (arg.cmd) {
+			searchAct();
+		} else {
+			searchElement();
+		}
 	} else {
-		searchElement();
+		searchReset();
 	}
 }
 
@@ -59,8 +61,8 @@ function searchParse(input) {
 			if (!el) continue ;
 			if (el[0] === "$") {
 				let cat = el.replace(searchActPattern, "$1");
-				let val = el.replace(searchActPattern, "$2");
 				if (searchActList[cat]) {
+					let val = el.replace(searchActPattern, "$2");
 					searchActList[cat].push(val) ;
 					cmd = true ;
 				};
@@ -99,21 +101,28 @@ function searchParse(input) {
 
 // Reset the search
 function searchReset() {
-	document.getElementById("std").hidden = false ;
 	document.getElementById("searchResult").hidden = true ;
-	for (let item of document.querySelectorAll("#list>li")) {
-		item.hidden = false ;
-		searchResetElement(item.querySelector(".fileRef"));
-		searchResetElement(item.querySelector(".lang"));
-		searchResetElement(item.querySelector(".elementTitle"));
-		searchResetElement(item.querySelector(".type"));
+	var sdt = document.getElementById("std");
+	std.hidden = false ;
+	for (let c of ["fileRef", "lang", "elementTitle", "type"]) {
+		for (let item of std.getElementsByClassName(c)) {
+			searchResetElement(item)
+		}
+	}
+	for (let li of document.getElementsByTagName("li")) {
+		li.hidden = false ;
 	}
 }
 
 // Reset an simple elem
 function searchResetElement(el) {
-	if (el.querySelectorAll(".find").length > 0) {
-		el.innerHTML = el.textContent ;
+	var list = el.getElementsByClassName("find") ;
+	if (list.length) {
+		var text = el.textContent ;
+		for (let find of list) {
+			find.remove();
+		}
+		el.textContent = text ;
 	}
 }
 
