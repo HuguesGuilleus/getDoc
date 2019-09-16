@@ -6,9 +6,11 @@
 {%- assign pageLang = page.path | split: '/' | first -%}
 <ul>
   {%- for file in site.pages -%}
-  {%- assign fileLang = file.path | split: '/' | first -%}
-    {%- if fileLang == pageLang %}
-      <li><a href="{{file.name|remove:".md"}}">{{file.title}}</a></li>
+    {%- if file.name != "index.md" -%}
+      {%- assign fileLang = file.path | split: '/' | first -%}
+      {%- if fileLang == pageLang %}
+        <li><a href="{{file.name|remove:".md"}}">{{file.title}}</a></li>
+      {%- endif -%}
     {%- endif -%}
   {%- endfor %}
 </ul>
