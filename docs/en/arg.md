@@ -26,6 +26,7 @@ To generate XML, use `-x` or `--xml` option and the name of the file or director
 
 | Short Flags | Long Flags  | Description                        |
 | :---------- | :---------- | :--------------------------------- |
+| `-d`        | `--debug`   | Only list the type of each lines.  |
 | `-l`        | `--lang`    | List supported languages and exit. |
 | `-h`        | `--help`    | Print the help and exit.           |
 | `-v`        | `--verbose` | Enable verbose mode.               |

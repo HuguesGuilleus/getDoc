@@ -27,6 +27,7 @@ Notons que l'on peut indiquer plusieurs formats et plusieurs sorties pour chacun
 
 | Drapeau short  | Drapeau long   | Description                                         |
 | :------------- | :------------- | :-------------------------------------------------- |
+| `-d`           | `--debug`      | Affiche seulement le type de chaque ligne           |
 | `-l`           | `--lang`       | Liste les langages supportés et quitte le programme |
 | `-h`           | `--help`       | Affiche l'aide et quitte le programme               |
 | `-v`           | `--verbose`    | Active le mode verbeux                              |
