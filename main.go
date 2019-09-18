@@ -64,41 +64,46 @@ var spec = &parseOpt.SpecList{
 		Desc:       "Set xml output file",
 		NeedArg:    true,
 	},
+	&parseOpt.Spec{
+		NameShort: "d",
+		NameLong:  "debug",
+		Desc:      "Only list the type of each lines",
+		NeedArg:   false,
+	},
 }
 
 func main() {
 	opt := spec.ParseOs()
-
-	// Debug
-	// doc.ReadDebug([]string{"dataTest/bash.bash"})
-	// return
-
-	// Read file
-	var ind *doc.Index
-	if len(opt.Option[""]) == 0 {
-		ind = doc.Read(".")
+	if opt.Flag["debug"] {
+		doc.ReadDebug(opt.Option[""])
 	} else {
-		ind = &doc.Index{}
-		for _, file := range opt.Option[""] {
-			*ind = append(*ind, *doc.Read(file)...)
+		// Read file
+		var ind *doc.Index
+		if len(opt.Option[""]) == 0 {
+			ind = doc.Read(".")
+		} else {
+			ind = &doc.Index{}
+			for _, file := range opt.Option[""] {
+				*ind = append(*ind, *doc.Read(file)...)
+			}
 		}
-	}
-	// Save the HTML
-	if len(opt.Option["output"]) != 0 {
-		for _, out := range opt.Option["output"] {
-			ind.SaveHTML(out)
+		// Save the HTML
+		if len(opt.Option["output"]) != 0 {
+			for _, out := range opt.Option["output"] {
+				ind.SaveHTML(out)
+			}
+		} else if len(opt.Option["json"]) == 0 && len(opt.Option["xml"]) == 0 {
+			ind.SaveHTML("doc.html")
 		}
-	} else if len(opt.Option["json"]) == 0 && len(opt.Option["xml"]) == 0 {
-		ind.SaveHTML("doc.html")
-	}
-	// Save in JSON and XML
-	if len(opt.Option["json"]) != 0 || len(opt.Option["xml"]) != 0 {
-		data := ind.DataIndex()
-		for _, file := range opt.Option["json"] {
-			data.Json(file)
-		}
-		for _, file := range opt.Option["xml"] {
-			data.Xml(file)
+		// Save in JSON and XML
+		if len(opt.Option["json"]) != 0 || len(opt.Option["xml"]) != 0 {
+			data := ind.DataIndex()
+			for _, file := range opt.Option["json"] {
+				data.Json(file)
+			}
+			for _, file := range opt.Option["xml"] {
+				data.Xml(file)
+			}
 		}
 	}
 }
