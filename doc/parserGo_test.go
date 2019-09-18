@@ -22,6 +22,7 @@ func TestLangGo_parse(t *testing.T) {
 			if el.Comment == nil {
 				el.Comment = []string{}
 			}
+			langGo_type(lines)
 			langGo_parse(&index, lines, FileName)
 			if len(index) == 0 {
 				t.Error("There are any element.")

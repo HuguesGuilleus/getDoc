@@ -16,6 +16,7 @@ func TestLangJs_parse(t *testing.T) {
 			FileName := "swag.js"
 			el.FileName = FileName
 			el.Lang = "js"
+			langJs_type(lines)
 			langJs_parse(&index, lines, FileName)
 			if len(index) == 0 {
 				t.Error("There are many element")

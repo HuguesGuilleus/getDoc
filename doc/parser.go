@@ -43,26 +43,31 @@ type parserFuncs struct {
 }
 
 var parserList = map[string]*parserFuncs{
-	// "c":    langC_parse,
-	// "h":    langC_parse,
-	// "js":   langJs_parse,
-	// "go":   langGo_parse,
-	// "sh":   langBash_parse,
-	// "bash": langBash_parse,
 	"bash": &parserFuncs{
 		Parse: langBash_parse,
 		Type:  langBash_type,
 	},
+	"sh": &parserFuncs{
+		Parse: langBash_parse,
+		Type:  langBash_type,
+	},
+	"c": &parserFuncs{
+		Parse: langC_parse,
+		Type:  langC_type,
+	},
+	"h": &parserFuncs{
+		Parse: langC_parse,
+		Type:  langC_type,
+	},
+	"js": &parserFuncs{
+		Parse: langJs_parse,
+		Type:  langJs_type,
+	},
+	"go": &parserFuncs{
+		Parse: langGo_parse,
+		Type:  langGo_type,
+	},
 }
-
-// var parserList = map[string]parserFunc{
-// 	"c":    langC_parse,
-// 	"h":    langC_parse,
-// 	"js":   langJs_parse,
-// 	"go":   langGo_parse,
-// 	"sh":   langBash_parse,
-// 	"bash": langBash_parse,
-// }
 
 // Simple secure for the list
 var parserListMutex sync.Mutex

@@ -19,7 +19,6 @@ var (
 
 // The parser function for the JavaScript.
 func langJs_parse(index *Index, lines fileLines, fileName string) {
-	langJs_type(lines)
 	for i, l := range lines {
 		ty := ""
 		switch l.Type {

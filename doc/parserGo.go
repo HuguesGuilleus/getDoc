@@ -24,7 +24,6 @@ var (
 )
 
 func langGo_parse(index *Index, lines fileLines, fileName string) {
-	langGo_type(lines)
 	for i, l := range lines {
 		var ty, name string
 		switch l.Type {

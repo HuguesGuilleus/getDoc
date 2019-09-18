@@ -24,7 +24,6 @@ var (
 )
 
 func langC_parse(index *Index, lines fileLines, fileName string) {
-	langC_type(lines)
 	for i, l := range lines {
 		switch l.Type {
 		case TYPE_FUNCTION:

@@ -16,6 +16,7 @@ func TestLangBash_parse(t *testing.T) {
 			FileName := "yolo.bash"
 			el.FileName = FileName
 			el.Lang = "bash"
+			langBash_type(lines)
 			langBash_parse(&index, lines, FileName)
 			if len(index) == 0 {
 				t.Error("There are many element")

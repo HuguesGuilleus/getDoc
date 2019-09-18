@@ -32,6 +32,7 @@ func TestLangC_parse(t *testing.T) {
 			Comment:  []string{"My function for Say Hello World."},
 			Lang:     "c",
 		}
+		langC_type(lines)
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
@@ -52,6 +53,7 @@ func TestLangC_parse(t *testing.T) {
 			Lang:     "c",
 			FileName: fileName,
 		}
+		langC_type(lines)
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, element, *index[0], "")
 	})
@@ -72,6 +74,7 @@ func TestLangC_parse(t *testing.T) {
 			Lang:     "c",
 			FileName: fileName,
 		}
+		langC_type(lines)
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, element, *index[0], "")
 	})
@@ -92,6 +95,7 @@ func TestLangC_parse(t *testing.T) {
 			Lang:     "c",
 			FileName: fileName,
 		}
+		langC_type(lines)
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
@@ -120,6 +124,7 @@ func TestLangC_parse(t *testing.T) {
 			Lang:     "c",
 			FileName: fileName,
 		}
+		langC_type(lines)
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
