@@ -12,7 +12,7 @@ import (
 func TestIndexPush(t *testing.T) {
 	ind := &Index{}
 	el := &Element{
-		Name:     "yolo",
+		Name: "yolo",
 	}
 	ind.push(el)
 	assert.Equal(t, 1, len(*ind), "length of the index must be one 1")
@@ -43,16 +43,15 @@ func TestGetExt(t *testing.T) {
 func TestLangKnown(t *testing.T) {
 	parserListSave := parserList
 	defer func() { parserList = parserListSave }()
-	f1 := func(ind *Index, lines fileLines, path string) {}
-	parserList = map[string]parserFunc{
-		"a": f1,
-		"b": func(ind *Index, lines fileLines, path string) {},
+	langA := &parserFuncs{}
+	parserList = map[string]*parserFuncs{
+		"a": langA,
+		"b": &parserFuncs{},
 	}
-	// todo: verify by pointer...
-	if langKnown("a") == nil {
+	if langKnown("zzz/xxx.a") != langA {
 		t.Error("A known lang")
 	}
-	if langKnown("zz") != nil {
+	if langKnown("xxx/yyy.zz") != nil {
 		t.Error("langKnown with unknwolang must return nil", langKnown("zz"))
 	}
 }

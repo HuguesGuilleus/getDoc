@@ -18,7 +18,6 @@ var (
 )
 
 func langBash_parse(index *Index, lines fileLines, fileName string) {
-	langBash_type(lines)
 	var ty string
 	for i, l := range lines {
 		switch l.Type {

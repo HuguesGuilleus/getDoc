@@ -23,14 +23,33 @@ const (
 
 type parserFunc func(index *Index, lines fileLines, fileName string)
 
-var parserList = map[string]parserFunc{
-	"c":    langC_parse,
-	"h":    langC_parse,
-	"js":   langJs_parse,
-	"go":   langGo_parse,
-	"sh":   langBash_parse,
-	"bash": langBash_parse,
+// A parser for one language
+type parserFuncs struct {
+	Parse func(index *Index, lines fileLines, fileName string)
+	Type  func(fileLines)
 }
+
+var parserList = map[string]*parserFuncs{
+	// "c":    langC_parse,
+	// "h":    langC_parse,
+	// "js":   langJs_parse,
+	// "go":   langGo_parse,
+	// "sh":   langBash_parse,
+	// "bash": langBash_parse,
+	"bash": &parserFuncs{
+		Parse: langBash_parse,
+		Type:  langBash_type,
+	},
+}
+
+// var parserList = map[string]parserFunc{
+// 	"c":    langC_parse,
+// 	"h":    langC_parse,
+// 	"js":   langJs_parse,
+// 	"go":   langGo_parse,
+// 	"sh":   langBash_parse,
+// 	"bash": langBash_parse,
+// }
 
 // Simple secure for the list
 var parserListMutex sync.Mutex

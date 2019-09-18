@@ -23,9 +23,7 @@ func Read(root string) (ind *Index) {
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		defer rec()
 		panicing(err)
-		if info.IsDir() {
-			return nil
-		} else {
+		if !info.IsDir() {
 			wg.Add(1)
 			go ind.readFile(path, wg)
 		}
@@ -37,14 +35,16 @@ func Read(root string) (ind *Index) {
 // Read one file, test if the type is know, split the line and call the parser
 func (ind *Index) readFile(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	if parser := langKnown(getExt(path)); parser != nil {
+	if parser := langKnown(path); parser != nil {
 		log.Print("READ FILE: ", path)
-		parser(ind, splitFile(path), path)
+		lines := splitFile(path)
+		parser.Type(lines)
+		parser.Parse(ind, lines, path)
 	}
 }
 
 // Get the name of the file or directory
-func getTitle(path string, wg *sync.WaitGroup)  {
+func getTitle(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	path, err := filepath.Abs(path)
 	printErr(err)

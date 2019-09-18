@@ -116,17 +116,3 @@ func TestLangBash_type(t *testing.T) {
 		},
 	}, input, "")
 }
-
-/*
-yolo1() {
-	echo "Carpe Diem 1"
-}
-
-function yolo2() {
-	echo "Carpe Diem 2"
-}
-
-function yolo3 {
-	echo "Carpe Diem 3"
-}
-*/

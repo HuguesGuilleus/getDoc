@@ -134,15 +134,10 @@ func getExt(path string) string {
 
 // return the parser for the lang. If there are no parser,
 // the function return nil
-func langKnown(ext string) parserFunc {
+func langKnown(path string) *parserFuncs {
 	parserListMutex.Lock()
 	defer parserListMutex.Unlock()
-	for lang, parser := range parserList {
-		if ext == lang {
-			return parser
-		}
-	}
-	return nil
+	return parserList[getExt(path)]
 }
 
 // Read and split file in a string for each line. If error, panic.
