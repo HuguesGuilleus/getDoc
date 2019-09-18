@@ -21,6 +21,19 @@ const (
 	TYPE_VAR        = 9
 )
 
+var nameType = map[int]string{
+	0: "?",
+	1: "COMM",
+	2: "",
+	3: "FUNC",
+	4: "TYPE",
+	5: "MACROF",
+	6: "MACROC",
+	7: "CONST",
+	8: "CLASS",
+	9: "VAR",
+}
+
 type parserFunc func(index *Index, lines fileLines, fileName string)
 
 // A parser for one language

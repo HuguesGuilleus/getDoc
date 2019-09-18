@@ -68,6 +68,11 @@ var spec = &parseOpt.SpecList{
 
 func main() {
 	opt := spec.ParseOs()
+
+	// Debug
+	// doc.ReadDebug([]string{"dataTest/bash.bash"})
+	// return
+
 	// Read file
 	var ind *doc.Index
 	if len(opt.Option[""]) == 0 {

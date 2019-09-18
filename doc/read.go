@@ -5,6 +5,7 @@
 package doc
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -40,6 +41,28 @@ func (ind *Index) readFile(path string, wg *sync.WaitGroup) {
 		lines := splitFile(path)
 		parser.Type(lines)
 		parser.Parse(ind, lines, path)
+	}
+}
+
+// Read files in debug mode
+func ReadDebug(roots []string) {
+	for _,root := range roots {
+		filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			defer rec()
+			panicing(err)
+			if !info.IsDir() {
+				if parser := langKnown(path); parser != nil {
+					log.Print("READ FILE: ", path)
+					lines := splitFile(path)
+					parser.Type(lines)
+					for i, l := range lines {
+						t := nameType[l.Type]
+						fmt.Printf("%3d %6s :: %s\n",i, t, l.Str)
+					}
+				}
+			}
+			return nil
+		})
 	}
 }
 
