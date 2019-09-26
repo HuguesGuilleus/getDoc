@@ -8,8 +8,6 @@ import (
 	"regexp"
 )
 
-// TODO: global variable
-
 var (
 	langC_comment          = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
 	langC_function         = regexp.MustCompile("^([\\w* ]+\\s+\\w+\\(.*\\))[\\s{]*$")
@@ -21,6 +19,7 @@ var (
 	langC_MacroConst       = regexp.MustCompile("^\\s*(#define\\s+\\w+\\s+.+)$")
 	langC_MacroName        = regexp.MustCompile("^\\s*#define\\s+(\\w+).*")
 	langC_MacroFunc        = regexp.MustCompile("^\\s*(#define\\s+\\w+\\(.*\\)\\s+.+)$")
+	langC_var              = regexp.MustCompile("^(\\s*)(\\w+\\s*\\*\\s*|\\w+\\s+)(\\w+)(.*)")
 )
 
 func langC_parse(index *Index, lines fileLines, fileName string) {
@@ -85,6 +84,19 @@ func langC_parse(index *Index, lines fileLines, fileName string) {
 				Comment:  lines.getComment(i),
 				Lang:     "c",
 			})
+		case TYPE_VAR:
+			if fileName[len(fileName)-1] == 'c' && langC_var.ReplaceAllString(l.Str, "$1") != "" {
+				break
+			}
+			index.push(&Element{
+				Name:     langC_var.ReplaceAllString(l.Str, "$3"),
+				LineName: langC_var.ReplaceAllString(l.Str, "$2$3$4"),
+				Type:     "var",
+				FileName: fileName,
+				LineNum:  i + 1,
+				Comment:  lines.getComment(i),
+				Lang:     "c",
+			})
 		}
 	}
 }
@@ -105,6 +117,8 @@ func langC_type(lines fileLines) {
 			line.Type = TYPE_MACROCONST
 		} else if langC_MacroFunc.MatchString(line.Str) {
 			line.Type = TYPE_MACROFUNC
+		} else if langC_var.MatchString(line.Str) {
+			line.Type = TYPE_VAR
 		} else {
 			line.Type = TYPE_CODE
 		}

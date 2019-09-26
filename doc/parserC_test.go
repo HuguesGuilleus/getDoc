@@ -128,6 +128,57 @@ func TestLangC_parse(t *testing.T) {
 		langC_parse(&index, lines, fileName)
 		assert.Equal(t, elementFunc, *index[0], "")
 	})
+	t.Run("Var", func(t *testing.T) {
+		lines := fileLines{
+			&line{Str: "	int yolo = 42 ;"},
+		}
+		langC_type(lines)
+		t.Run("golbal in .h", func(t *testing.T) {
+			index := Index{}
+			fileName := "aaa.h"
+			elementFunc := Element{
+				Name:     "yolo",
+				LineName: "int yolo = 42 ;",
+				Type:     "var",
+				LineNum:  1,
+				Comment:  []string{},
+				Lang:     "c",
+				FileName: fileName,
+			}
+			langC_parse(&index, lines, fileName)
+			if assert.Equal(t, 1, len(index), "One element expected") {
+				assert.Equal(t, elementFunc, *index[0])
+			}
+		})
+		t.Run("golbal in .c", func(t *testing.T) {
+			index := Index{}
+			fileName := "aaa.c"
+			lines := fileLines{
+				&line{Str: "int yolo = 42 ;"},
+			}
+			elementFunc := Element{
+				Name:     "yolo",
+				LineName: "int yolo = 42 ;",
+				Type:     "var",
+				LineNum:  1,
+				Comment:  []string{},
+				Lang:     "c",
+				FileName: fileName,
+			}
+			langC_type(lines)
+			langC_parse(&index, lines, fileName)
+			if assert.Equal(t, 1, len(index), "One element expected") {
+				assert.Equal(t, elementFunc, *index[0])
+			}
+		})
+		t.Run("local var in .c", func(t *testing.T) {
+			index := Index{}
+			langC_parse(&index, lines, "aaa.c")
+			if len(index) != 0 {
+				t.Fail()
+			}
+		})
+	})
 }
 
 func TestLangCType(t *testing.T) {
@@ -140,6 +191,8 @@ func TestLangCType(t *testing.T) {
 		&line{Str: "typedef int bool ;"},
 		&line{Str: "#define YOLO 42"},
 		&line{Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
+		&line{Str: "int yolo = 14 ;"},
+		&line{Str: "int * yolo = 14 ;"},
 	}
 	langC_type(input)
 	assert.Equal(t, fileLines{
@@ -174,6 +227,14 @@ func TestLangCType(t *testing.T) {
 		&line{
 			Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
 			Type: TYPE_MACROFUNC,
+		},
+		&line{
+			Str:  "int yolo = 14 ;",
+			Type: TYPE_VAR,
+		},
+		&line{
+			Str:  "int * yolo = 14 ;",
+			Type: TYPE_VAR,
 		},
 	}, input, "")
 }
