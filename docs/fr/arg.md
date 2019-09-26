@@ -20,7 +20,7 @@ Pour générer du JSON, utilisez les options `-j` ou `--json` suivi du nom du fi
 
 Pour générer du XML, utilisez les options `-x` ou `--xml` suivi du nom du fichier ou du répertoire.
 
-Notons que l'on peut indiquer plusieurs formats et plusieurs sorties pour chacun d'eux.
+*Notons que l'on peut indiquer plusieurs formats et plusieurs sorties pour chacun d'eux.*
 
 
 ## Drapeaux Généraux

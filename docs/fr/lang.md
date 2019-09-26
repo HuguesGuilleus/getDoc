@@ -3,7 +3,7 @@ title: Languages Supportés
 ---
 
 ## Note d'introduction
-`getDoc` découpe chaque ligne, lui attribut un type grâce à des expression régulière puis les sélectionne. Cela nécessite un minimum d'indentation.
+`getDoc` découpe chaque ligne, lui attribut un type grâce à des expressions régulières puis les sélectionne. Cela nécessite un minimum d'indentation.
 
 De plus ce programme se limite au objets globaux.
 
@@ -35,8 +35,9 @@ Deux barres obliques ou plus: `//`
 ### Pris en charge:
 - Fonction (globale) (`func`)
 - Type (`type`)
-- Les macros fonctions (`macroFunc`) et variables (`macroConst`)
+- Les macro fonction (`macroFunc`) et variable (`macroConst`)
 - Variable globale
+
 
 ## Go
 ### Commentaire supporté pour la documentation

@@ -2,13 +2,13 @@
 title: Supported languages
 ---
 
-`getDoc` split every line, give a type with regular expression and select it. It's required a minimum of indentation.
+`getDoc` split every lines, give a type with regular expressions and select it. It's required a minimum of indentation.
 
 Furthermore, this program is limited to global object.
 
 
 ## Comment
-This documentation system provides the go language. The documentation is in comments just before the documented element. If we want write many paragraph, you must write a commented line. A paragraph can be split on several line.
+This documentation system provides from the go language. The documentation is in comments just before the documented element. If we want write many paragraph, you must write a commented line. A paragraph can be split on several line.
 ```c
 // A first paragraph.
 //
@@ -36,6 +36,7 @@ More than two slash are also supported: `//`
 - Type (`type`)
 - The macro function (`macroFunc`) and constant (`macroConst`)
 - Global variable
+
 
 ## Go
 ### Comment supported for documentation

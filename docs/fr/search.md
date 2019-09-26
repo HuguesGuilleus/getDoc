@@ -10,7 +10,7 @@ Vous pouvez rechercher des chaînes de caractères séparées par des espaces. L
 
 
 ## Liste
-Pour afficher toutes les listes: `$ls`, pour une liste spécifique: `$ls:liste`. Les listes sont affecté par la recherche d'éléments.
+Pour afficher toutes les listes: `$ls` ou pour une liste spécifique: `$ls:liste`. Les listes sont affectées par la recherche d'éléments.
 Les listes sont:
 - Les fichiers: `file`
 - Les langages: `lang`

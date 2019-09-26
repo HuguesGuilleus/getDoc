@@ -19,7 +19,7 @@ To generate JSON, use `-j` or `--json` option and the name of the file or direct
 
 To generate XML, use `-x` or `--xml` option and the name of the file or directory.
 
-*Note:* We can pass several output format and file for each of them.
+*Note: We can pass several output format and file for each of them.*
 
 
 ## General flags
