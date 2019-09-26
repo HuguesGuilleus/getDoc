@@ -16,6 +16,8 @@
 		char swag;
 	} customType ;
 
+	int * swagVar = 36 ;
+
 	int hello();
 
 #endif

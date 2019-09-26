@@ -19,7 +19,8 @@ var (
 	langC_MacroConst       = regexp.MustCompile("^\\s*(#define\\s+\\w+\\s+.+)$")
 	langC_MacroName        = regexp.MustCompile("^\\s*#define\\s+(\\w+).*")
 	langC_MacroFunc        = regexp.MustCompile("^\\s*(#define\\s+\\w+\\(.*\\)\\s+.+)$")
-	langC_var              = regexp.MustCompile("^(\\s*)(\\w+\\s*\\*\\s*|\\w+\\s+)(\\w+)(.*)")
+	langC_var              = regexp.MustCompile("^(\\s*)(\\w+\\s*\\*\\s*|\\w+\\s+)(\\w+)([^()]+)$")
+	langC_keyWord = regexp.MustCompile("return|typdef|if|else|do|while|for|switch|case|struct|enum")
 )
 
 func langC_parse(index *Index, lines fileLines, fileName string) {
@@ -104,7 +105,13 @@ func langC_parse(index *Index, lines fileLines, fileName string) {
 // get the type of each line, and get get info.
 // ex: "// aaa" --> "aaa"
 func langC_type(lines fileLines) {
-	for _, line := range lines {
+	skipLines := 0
+	for i, line := range lines {
+		if skipLines > 0 {
+			line.Type = TYPE_CODE
+			skipLines--
+			continue
+		}
 		if langC_comment.MatchString(line.Str) {
 			line.Type = TYPE_COMMENT
 			line.Str = langC_comment.ReplaceAllString(line.Str, "$1")
@@ -113,12 +120,21 @@ func langC_type(lines fileLines) {
 			line.Str = langC_function.ReplaceAllString(line.Str, "$1")
 		} else if langC_Typedef.MatchString(line.Str) {
 			line.Type = TYPE_TYPEDEF
+			for j, l := range lines[i:] {
+				if langC_TypedefMultEnd.MatchString(l.Str) {
+					skipLines = j
+				}
+			}
+		} else if langC_var.MatchString(line.Str) {
+			if !langC_keyWord.MatchString(line.Str) {
+				line.Type = TYPE_VAR
+			} else {
+				line.Type = TYPE_CODE
+			}
 		} else if langC_MacroConst.MatchString(line.Str) {
 			line.Type = TYPE_MACROCONST
 		} else if langC_MacroFunc.MatchString(line.Str) {
 			line.Type = TYPE_MACROFUNC
-		} else if langC_var.MatchString(line.Str) {
-			line.Type = TYPE_VAR
 		} else {
 			line.Type = TYPE_CODE
 		}

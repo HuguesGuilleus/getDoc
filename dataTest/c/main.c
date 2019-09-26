@@ -1,5 +1,7 @@
 #include "main.h"
 
+int yolo6Var = 42 ;
+
 // C'est la fête!
 //
 // The famous main function
