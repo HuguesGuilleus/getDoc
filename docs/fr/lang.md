@@ -36,10 +36,7 @@ Deux barres obliques ou plus: `//`
 - Fonction (globale) (`func`)
 - Type (`type`)
 - Les macros fonctions (`macroFunc`) et variables (`macroConst`)
-
-### Non pris en charge:
 - Variable globale
-
 
 ## Go
 ### Commentaire supporté pour la documentation

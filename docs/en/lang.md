@@ -35,10 +35,7 @@ More than two slash are also supported: `//`
 - Function (global) (`func`)
 - Type (`type`)
 - The macro function (`macroFunc`) and constant (`macroConst`)
-
-### No supported element:
 - Global variable
-
 
 ## Go
 ### Comment supported for documentation
