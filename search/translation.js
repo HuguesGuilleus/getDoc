@@ -7,15 +7,16 @@ document.addEventListener("DOMContentLoaded",()=>{
 	for (let lang of navigator.languages) {
 		let trad = tem.querySelector("#lang_"+lang);
 		if (trad) {
-			translate(trad);
+			translate(trad, lang);
 			return ;
 		}
 	}
-	translate(tem.querySelector("#lang_en"))
+	translate(tem.querySelector("#lang_en"), "en")
 },{once:true,});
 
 
-function translate(trad) {
+function translate(trad, lang) {
+	document.documentElement.lang = lang ;
 	// inputSearch
 	document.getElementById("searchInput").placeholder =
 		trad.querySelector("#placeholder").textContent ;
