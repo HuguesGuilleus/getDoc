@@ -6,7 +6,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	document.getElementById("updateNotifClose").onclick = ()=>{
 		document.getElementById("updateNotif").remove();
 	};
+	document.getElementById("updateNotifUpdate").onclick = ()=>{
+		document.location.reload(true);
+	};
 	setTimeout(()=>{
 		document.getElementById("updateNotif").hidden = false ;
-	}, 0* 2*60*1000);
+	}, 0*2*60*1000);
 },{once:true,});

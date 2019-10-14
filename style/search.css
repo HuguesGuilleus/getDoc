@@ -6,7 +6,6 @@ header{
 	display: grid;
 	grid-template-columns: auto 1fr ;
 	margin: -1ex -1ex 2ex;
-	border-bottom: 0.7ex #737373 solid;
 	background: #2a2a2e ;
 }
 
@@ -17,7 +16,6 @@ h1{
 
 #searchInput{
 	all:unset;
-	/* resize: none; */
 	font-size: larger;
 	font-weight: bold;
 	padding: 1ex 2.5ex;
