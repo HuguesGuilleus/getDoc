@@ -181,60 +181,17 @@ func TestLangC_parse(t *testing.T) {
 	})
 }
 
-func TestLangCType(t *testing.T) {
-	input := fileLines{
-		&line{Str: "/// aaa"},
-		&line{Str: "//"},
-		&line{Str: "	a = 4.2 ;"},
-		&line{Str: "int yolo(f float) {"},
-		&line{Str: "* int yolo(f float)"},
-		&line{Str: "typedef int bool ;"},
-		&line{Str: "#define YOLO 42"},
-		&line{Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
-		&line{Str: "int yolo = 14 ;"},
-		&line{Str: "int * yolo = 14 ;"},
-	}
-	langC_type(input)
-	assert.Equal(t, fileLines{
-		&line{
-			Str:  "aaa",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str:  "",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str: "	a = 4.2 ;",
-			Type: TYPE_CODE,
-		},
-		&line{
-			Str:  "int yolo(f float)",
-			Type: TYPE_FUNCTION,
-		},
-		&line{
-			Str:  "* int yolo(f float)",
-			Type: TYPE_FUNCTION,
-		},
-		&line{
-			Str:  "typedef int bool ;",
-			Type: TYPE_TYPEDEF,
-		},
-		&line{
-			Str:  "#define YOLO 42",
-			Type: TYPE_MACROCONST,
-		},
-		&line{
-			Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
-			Type: TYPE_MACROFUNC,
-		},
-		&line{
-			Str:  "int yolo = 14 ;",
-			Type: TYPE_VAR,
-		},
-		&line{
-			Str:  "int * yolo = 14 ;",
-			Type: TYPE_VAR,
-		},
-	}, input, "")
+func TestLangC_Type(t *testing.T) {
+	testType(t, langC_type, []testingLine{
+		{TYPE_COMMENT, "/// aaa", "aaa"},
+		{TYPE_COMMENT, "//", ""},
+		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
+		{TYPE_FUNCTION, "int yolo(f float) {", "int yolo(f float)"},
+		{TYPE_FUNCTION, "* int yolo(f float)", "* int yolo(f float)"},
+		{TYPE_TYPEDEF, "typedef int bool ;", "typedef int bool ;"},
+		{TYPE_MACROCONST, "#define YOLO 42", "#define YOLO 42"},
+		{TYPE_MACROFUNC, "#define ERR(xxx ...)	fprintf(stderr, xxx)", "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
+		{TYPE_VAR, "int yolo = 14 ;", "int yolo = 14 ;"},
+		{TYPE_VAR, "int * yolo = 14 ;", "int * yolo = 14 ;"},
+	})
 }

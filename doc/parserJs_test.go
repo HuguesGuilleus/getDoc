@@ -65,42 +65,8 @@ func TestLangJs_parse(t *testing.T) {
 	})
 }
 
-// A line for the test
-type TestingLine struct {
-	// The type expected
-	T int
-	// B is the string Before typing
-	B string
-	// A is the string After typing
-	A string
-}
-
-// Type test the typing of a group of line
-func Type(t *testing.T, fx func(fileLines), lines []TestingLine) {
-	input := make(fileLines, len(lines), len(lines))
-	for i, l := range lines {
-		input[i] = &line{
-			Str: l.B,
-		}
-	}
-	fx(input)
-	for i, l := range lines {
-		if l.T != input[i].Type {
-			t.Errorf("Type error (line %d)", i)
-			t.Log("   Input line: ", l.B)
-			t.Logf("   Type: (expected: %d) %d", l.T, input[i].Type)
-		}
-		if l.A != input[i].Str {
-			t.Errorf("String error (line %d)", i)
-			t.Log("   Input line: ", l.B)
-			t.Log("   Expected:", l.A)
-			t.Log("   Received:", input[i].Str)
-		}
-	}
-}
-
 func TestLangJs_type(t *testing.T) {
-	Type(t, langJs_type, []TestingLine{
+	testType(t, langJs_type, []testingLine{
 		{TYPE_COMMENT, "/// aaa", "aaa"},
 		{TYPE_COMMENT, "//", ""},
 		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
