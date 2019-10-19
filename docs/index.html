@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+	(function () {
+		for (let lang of navigator.languages) {
+			switch (lang) {
+			case "fr":
+			case "fr-FR":
+				document.location.href = "fr/" ;
+				return ;
+			case "en":
+			case "en-US":
+				document.location.href = "en/" ;
+				return ;
+			}
+		}
+		document.location.href="en/";
+	})();
+	</script>
+</head>
+<body>
+	<noscript>
+		<p>Choose a language: /// Choisi une langue&thinsp;:</p>
+		<a href="fr/">Français/French</a><br>
+		<a href="en/">English</a><br>
+	</noscript>
+</body>
+</html>
