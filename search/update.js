@@ -11,5 +11,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	};
 	setTimeout(()=>{
 		document.getElementById("updateNotif").hidden = false ;
-	}, 0*2*60*1000);
+	}, 3*60*1000);
 },{once:true,});
