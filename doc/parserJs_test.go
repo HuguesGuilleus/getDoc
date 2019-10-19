@@ -65,55 +65,51 @@ func TestLangJs_parse(t *testing.T) {
 	})
 }
 
-func TestLangJs_type(t *testing.T) {
-	input := fileLines{
-		&line{Str: "/// aaa"},
-		&line{Str: "//"},
-		&line{Str: "	a = 4.2 ;"},
-		&line{Str: `function fx() {`},
-		&line{Str: `xxxfunction fx() {`},
-		&line{Str: `class ClassName {`},
-		&line{Str: `const YOLO = "Yolo !!!!!!!!!!!!!!!" ;`},
-		&line{Str: `var swag1 = "Swag   !d!bfg !Igh sdg,sfbku qef" ;`},
-		&line{Str: `let swag2 = "Swag!!"`},
+// A line for the test
+type TestingLine struct {
+	// The type expected
+	T int
+	// B is the string Before typing
+	B string
+	// A is the string After typing
+	A string
+}
+
+// Type test the typing of a group of line
+func Type(t *testing.T, fx func(fileLines), lines []TestingLine) {
+	input := make(fileLines, len(lines), len(lines))
+	for i, l := range lines {
+		input[i] = &line{
+			Str: l.B,
+		}
 	}
-	langJs_type(input)
-	assert.Equal(t, fileLines{
-		&line{
-			Str:  "aaa",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str:  "",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str: "	a = 4.2 ;",
-			Type: TYPE_CODE,
-		},
-		&line{
-			Str:  `function fx()`,
-			Type: TYPE_FUNCTION,
-		},
-		&line{
-			Str:  `xxxfunction fx() {`,
-			Type: TYPE_CODE,
-		},
-		&line{
-			Str:  `class ClassName`,
-			Type: TYPE_CLASS,
-		},
-		&line{
-			Str:  `const YOLO = "Yolo !!!!!!!!!!!!!!!" ;`,
-			Type: TYPE_CONST,
-		},
-		&line{
-			Str:  `var swag1 = "Swag   !d!bfg !Igh sdg,sfbku qef" ;`,
-			Type: TYPE_VAR,
-		},
-		&line{
-			Str:  `let swag2 = "Swag!!"`,
-			Type: TYPE_VAR,
-		},
-	}, input, "")
+	fx(input)
+	for i, l := range lines {
+		if l.T != input[i].Type {
+			t.Errorf("Type error (line %d)", i)
+			t.Log("   Input line: ", l.B)
+			t.Logf("   Type: (expected: %d) %d", l.T, input[i].Type)
+		}
+		if l.A != input[i].Str {
+			t.Errorf("String error (line %d)", i)
+			t.Log("   Input line: ", l.B)
+			t.Log("   Expected:", l.A)
+			t.Log("   Received:", input[i].Str)
+		}
+	}
+}
+
+func TestLangJs_type(t *testing.T) {
+	Type(t, langJs_type, []TestingLine{
+		{TYPE_COMMENT, "/// aaa", "aaa"},
+		{TYPE_COMMENT, "//", ""},
+		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
+		{TYPE_FUNCTION, "function fx() {", "function fx()"},
+		{TYPE_CODE, `xxxfunction fx() {`, `xxxfunction fx() {`},
+		{TYPE_CLASS, `class ClassName {`, `class ClassName`},
+		{TYPE_CONST, `const YOLO = "Yolo !!!!!!!!!!!!!!!" ;`,
+			`const YOLO = "Yolo !!!!!!!!!!!!!!!" ;`},
+		{TYPE_VAR, `var swag1 = "Swag   !d!bfg !Igh sdg,sfbku qef" ;`, `var swag1 = "Swag   !d!bfg !Igh sdg,sfbku qef" ;`},
+		{TYPE_VAR, `let swag2 = "Swag!!"`, `let swag2 = "Swag!!"`},
+	})
 }
