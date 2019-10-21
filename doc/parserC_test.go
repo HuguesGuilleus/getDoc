@@ -5,236 +5,77 @@
 package doc
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestLangC_parse(t *testing.T) {
-	fileName := "aaa.c"
-	t.Run("Function", func(t *testing.T) {
-		index := Index{}
-		lines := fileLines{
-			&line{
-				Str:  "// My function for Say Hello World.",
-				Type: TYPE_COMMENT,
-			},
-			&line{
-				Str:  "int hello() {",
-				Type: TYPE_FUNCTION,
-			},
-		}
-		elementFunc := Element{
-			Name:     "hello",
-			LineName: "int hello()",
-			Type:     "func",
-			FileName: fileName,
-			LineNum:  2,
-			Comment:  []string{"My function for Say Hello World."},
-			Lang:     "c",
-		}
-		langC_type(lines)
-		langC_parse(&index, lines, fileName)
-		assert.Equal(t, elementFunc, *index[0], "")
+	testingFile = "prog.c"
+	testParser(t, "Function", []string{"int hello() {"}, Element{
+		Name:     "hello",
+		LineName: "int hello()",
+		Type:     "func",
 	})
-	t.Run("MacroConst", func(t *testing.T) {
-		index := Index{}
-		lines := fileLines{
-			&line{
-				Str: "	#define YOLO 14",
-				Type: TYPE_COMMENT,
-			},
-		}
-		element := Element{
-			Name:     "YOLO",
-			LineName: "#define YOLO 14",
-			Type:     "macroConst",
-			LineNum:  1,
-			Comment:  []string{},
-			Lang:     "c",
-			FileName: fileName,
-		}
-		langC_type(lines)
-		langC_parse(&index, lines, fileName)
-		assert.Equal(t, element, *index[0], "")
+	testParser(t, "MacroConst", []string{"#define YOLO 14"}, Element{
+		Name:     "YOLO",
+		LineName: "#define YOLO 14",
+		Type:     "macroConst",
 	})
-	t.Run("MacroFunc", func(t *testing.T) {
-		index := Index{}
-		lines := fileLines{
-			&line{
-				Str: "	#define ERR(xxx ...)	fprintf(stderr, xxx)",
-				Type: TYPE_COMMENT,
-			},
-		}
-		element := Element{
-			Name: "ERR",
-			LineName: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
-			Type:     "macroFunc",
-			LineNum:  1,
-			Comment:  []string{},
-			Lang:     "c",
-			FileName: fileName,
-		}
-		langC_type(lines)
-		langC_parse(&index, lines, fileName)
-		assert.Equal(t, element, *index[0], "")
+	testParser(t, "MacroFunc", []string{"	#define ERR(xxx ...)	fprintf(stderr, xxx)"}, Element{
+		Name: "ERR",
+		LineName: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
+		Type: "macroFunc",
 	})
-	t.Run("TypedefSimple", func(t *testing.T) {
-		index := Index{}
-		lines := fileLines{
-			&line{
-				Str:  "typedef int bool ;",
-				Type: TYPE_TYPEDEF,
-			},
-		}
-		elementFunc := Element{
-			Name:     "bool",
-			LineName: "typedef int bool ;",
-			Type:     "type",
-			LineNum:  1,
-			Comment:  []string{},
-			Lang:     "c",
-			FileName: fileName,
-		}
-		langC_type(lines)
-		langC_parse(&index, lines, fileName)
-		assert.Equal(t, elementFunc, *index[0], "")
+	testParser(t, "TypedefSimple", []string{"typedef int bool ;"}, Element{
+		Name:     "bool",
+		LineName: "typedef int bool ;",
+		Type:     "type",
 	})
-	t.Run("TypedefMultlines", func(t *testing.T) {
-		index := Index{}
-		lines := fileLines{
-			&line{
-				Str:  "typedef struct {",
-				Type: TYPE_TYPEDEF,
-			},
-			&line{
-				Str: "	int swag ;",
-				Type: TYPE_CODE,
-			},
-			&line{
-				Str:  "} yolo ;",
-				Type: TYPE_CODE,
-			},
-		}
-		elementFunc := Element{
-			Name:     "yolo",
-			LineName: "typedef struct",
-			Type:     "type",
-			LineNum:  1,
-			Comment:  []string{},
-			Lang:     "c",
-			FileName: fileName,
-		}
-		langC_type(lines)
-		langC_parse(&index, lines, fileName)
-		assert.Equal(t, elementFunc, *index[0], "")
+	testParser(t, "TypedefMultlines", []string{
+		"typedef struct {",
+		"	int swag ;",
+		"} yolo ;",
+	}, Element{
+		Name:     "yolo",
+		LineName: "typedef struct",
+		Type:     "type",
 	})
-	t.Run("Var", func(t *testing.T) {
-		lines := fileLines{
-			&line{Str: "	int yolo = 42 ;"},
+	testParser(t, "VarGlobal.c", []string{"int yolo = 42 ;"}, Element{
+		Name:     "yolo",
+		LineName: "int yolo = 42 ;",
+		Type:     "var",
+	})
+	testingFile = "prog.h"
+	testParser(t, "VarGlobal.h", []string{"	int yolo = 42 ;"}, Element{
+		Name:     "yolo",
+		LineName: "int yolo = 42 ;",
+		Type:     "var",
+		Lang:     "c",
+	})
+	t.Run("LocalVar in .c", func(t *testing.T) {
+		index := Index{}
+		langC_parse(&index, fileLines{
+			&line{
+				Str: "	int yolo = 42 ;",
+				Type: TYPE_VAR,
+			},
+		}, "aaa.c")
+		if len(index) != 0 {
+			t.Fail()
 		}
-		langC_type(lines)
-		t.Run("golbal in .h", func(t *testing.T) {
-			index := Index{}
-			fileName := "aaa.h"
-			elementFunc := Element{
-				Name:     "yolo",
-				LineName: "int yolo = 42 ;",
-				Type:     "var",
-				LineNum:  1,
-				Comment:  []string{},
-				Lang:     "c",
-				FileName: fileName,
-			}
-			langC_parse(&index, lines, fileName)
-			if assert.Equal(t, 1, len(index), "One element expected") {
-				assert.Equal(t, elementFunc, *index[0])
-			}
-		})
-		t.Run("golbal in .c", func(t *testing.T) {
-			index := Index{}
-			fileName := "aaa.c"
-			lines := fileLines{
-				&line{Str: "int yolo = 42 ;"},
-			}
-			elementFunc := Element{
-				Name:     "yolo",
-				LineName: "int yolo = 42 ;",
-				Type:     "var",
-				LineNum:  1,
-				Comment:  []string{},
-				Lang:     "c",
-				FileName: fileName,
-			}
-			langC_type(lines)
-			langC_parse(&index, lines, fileName)
-			if assert.Equal(t, 1, len(index), "One element expected") {
-				assert.Equal(t, elementFunc, *index[0])
-			}
-		})
-		t.Run("local var in .c", func(t *testing.T) {
-			index := Index{}
-			langC_parse(&index, lines, "aaa.c")
-			if len(index) != 0 {
-				t.Fail()
-			}
-		})
 	})
 }
 
-func TestLangCType(t *testing.T) {
-	input := fileLines{
-		&line{Str: "/// aaa"},
-		&line{Str: "//"},
-		&line{Str: "	a = 4.2 ;"},
-		&line{Str: "int yolo(f float) {"},
-		&line{Str: "* int yolo(f float)"},
-		&line{Str: "typedef int bool ;"},
-		&line{Str: "#define YOLO 42"},
-		&line{Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
-		&line{Str: "int yolo = 14 ;"},
-		&line{Str: "int * yolo = 14 ;"},
-	}
-	langC_type(input)
-	assert.Equal(t, fileLines{
-		&line{
-			Str:  "aaa",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str:  "",
-			Type: TYPE_COMMENT,
-		},
-		&line{
-			Str: "	a = 4.2 ;",
-			Type: TYPE_CODE,
-		},
-		&line{
-			Str:  "int yolo(f float)",
-			Type: TYPE_FUNCTION,
-		},
-		&line{
-			Str:  "* int yolo(f float)",
-			Type: TYPE_FUNCTION,
-		},
-		&line{
-			Str:  "typedef int bool ;",
-			Type: TYPE_TYPEDEF,
-		},
-		&line{
-			Str:  "#define YOLO 42",
-			Type: TYPE_MACROCONST,
-		},
-		&line{
-			Str: "#define ERR(xxx ...)	fprintf(stderr, xxx)",
-			Type: TYPE_MACROFUNC,
-		},
-		&line{
-			Str:  "int yolo = 14 ;",
-			Type: TYPE_VAR,
-		},
-		&line{
-			Str:  "int * yolo = 14 ;",
-			Type: TYPE_VAR,
-		},
-	}, input, "")
+func TestLangC_Type(t *testing.T) {
+	testType(t, langC_type, []testingLine{
+		{TYPE_COMMENT, "/// aaa", "aaa"},
+		{TYPE_COMMENT, "//", ""},
+		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
+		{TYPE_FUNCTION, "int yolo(f float) {", "int yolo(f float)"},
+		{TYPE_FUNCTION, "* int yolo(f float)", "* int yolo(f float)"},
+		{TYPE_TYPEDEF, "typedef int bool ;", "typedef int bool ;"},
+		{TYPE_MACROCONST, "#define YOLO 42", "#define YOLO 42"},
+		{TYPE_MACROFUNC, "#define ERR(xxx ...)	fprintf(stderr, xxx)", "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
+		{TYPE_VAR, "int yolo = 14 ;", "int yolo = 14 ;"},
+		{TYPE_VAR, "int * yolo = 14 ;", "int * yolo = 14 ;"},
+	})
 }
