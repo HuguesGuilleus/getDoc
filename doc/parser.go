@@ -25,7 +25,6 @@ var nameType = map[int]string{
 	0: "?",
 	1: "COMM",
 	2: "|",
-	// 2: "~",
 	3: "FUNC",
 	4: "TYPE",
 	5: "MACROF",
