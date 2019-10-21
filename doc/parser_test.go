@@ -50,11 +50,13 @@ var (
 // testParser test a parser with linesSimple. You must set testingFile
 func testParser(t *testing.T, name string, linesSimple []string, mod Element) {
 	t.Run(name, func(t *testing.T) {
-		ret := testParserGetElement(t, linesSimple)
+		ret := testParserGetElement(t, linesSimple, mod.LineNum)
 		// Config mod
 		mod.FileName = testingFile
-		mod.Lang = testingLang
 		mod.Comment = []string{"Comment"}
+		if len(mod.Lang) == 0 {
+			mod.Lang = testingLang
+		}
 		if mod.LineNum == 0 {
 			mod.LineNum = 2
 		}
@@ -83,7 +85,7 @@ func testParser(t *testing.T, name string, linesSimple []string, mod Element) {
 	})
 }
 
-func testParserGetElement(t *testing.T, linesSimple []string) Element {
+func testParserGetElement(t *testing.T, linesSimple []string, lineNum int) Element {
 	// Get the parser
 	testingLang = getExt(testingFile)
 	parser, ok := parserList[testingLang]
@@ -92,15 +94,24 @@ func testParserGetElement(t *testing.T, linesSimple []string) Element {
 		t.SkipNow()
 	}
 	// Config lines
-	lines := make(fileLines, len(linesSimple)+1, len(linesSimple)+1)
-	lines[0] = &line{}
-	for i, l := range linesSimple {
-		lines[i+1] = &line{Str: l}
-	}
-	parser.Type(lines)
-	lines[0] = &line{
-		Type: TYPE_COMMENT,
-		Str:  "Comment",
+	var lines fileLines
+	if lineNum == 0 {
+		lines = make(fileLines, len(linesSimple)+1, len(linesSimple)+1)
+		lines[0] = &line{}
+		for i, l := range linesSimple {
+			lines[i+1] = &line{Str: l}
+		}
+		parser.Type(lines)
+		lines[0] = &line{
+			Type: TYPE_COMMENT,
+			Str:  "Comment",
+		}
+	} else {
+		lines = make(fileLines, len(linesSimple), len(linesSimple))
+		for i, l := range linesSimple {
+			lines[i] = &line{Str: l}
+		}
+		parser.Type(lines)
 	}
 	// Create the Element
 	index := make(Index, 0, 1)
