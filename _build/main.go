@@ -15,6 +15,8 @@ var (
 	commentLong           = regexp.MustCompile("/\\*[^\\0]*?\\*/")
 	spaceSimple           = regexp.MustCompile("\\s+")
 	spaceJs               = regexp.MustCompile(" ?(\\W) ?")
+	paraLJs                = regexp.MustCompile("{{")
+	paraRJs                = regexp.MustCompile("}}")
 	spaceCss              = regexp.MustCompile(" ?([:;{}]) ?")
 
 	targetCss   = regexp.MustCompile("{CSS}")
@@ -90,6 +92,8 @@ func simpleJs(data []byte) []byte {
 	data = commentLong.ReplaceAll(data, []byte(" "))
 	data = spaceSimple.ReplaceAll(data, []byte(" "))
 	data = spaceJs.ReplaceAll(data, []byte("$1"))
+	data = paraLJs.ReplaceAll(data, []byte("{ {"))
+	data = paraRJs.ReplaceAll(data, []byte("} }"))
 	return data
 }
 
