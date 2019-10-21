@@ -57,7 +57,7 @@ func ReadDebug(roots []string) {
 					parser.Type(lines)
 					for i, l := range lines {
 						t := nameType[l.Type]
-						fmt.Printf("%3d %6s :: %s\n", i, t, l.Str)
+						fmt.Printf("%3d %6s  %s\n", i, t, l.Str)
 					}
 				}
 			}

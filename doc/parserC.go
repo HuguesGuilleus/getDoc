@@ -20,7 +20,7 @@ var (
 	langC_MacroName        = regexp.MustCompile("^\\s*#define\\s+(\\w+).*")
 	langC_MacroFunc        = regexp.MustCompile("^\\s*(#define\\s+\\w+\\(.*\\)\\s+.+)$")
 	langC_var              = regexp.MustCompile("^(\\s*)(\\w+\\s*\\*\\s*|\\w+\\s+)(\\w+)([^()]+)$")
-	langC_keyWord = regexp.MustCompile("return|typdef|if|else|do|while|for|switch|case|struct|enum")
+	langC_keyWord          = regexp.MustCompile("return|typdef|if|else|do|while|for|switch|case|struct|enum")
 )
 
 func langC_parse(index *Index, lines fileLines, fileName string) {
