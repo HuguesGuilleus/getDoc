@@ -9,7 +9,7 @@
     {%- if file.name != "index.md" -%}
       {%- assign fileLang = file.path | split: '/' | first -%}
       {%- if fileLang == pageLang %}
-        <li><a href="{{file.name|remove:".md"}}">{{file.title}}</a></li>
+        <li><a href="{{file.name|remove:".md"}}.html">{{file.title}}</a></li>
       {%- endif -%}
     {%- endif -%}
   {%- endfor %}

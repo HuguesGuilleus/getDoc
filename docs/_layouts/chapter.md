@@ -44,13 +44,17 @@ layout: default
 	{%- case pageLang -%}
 		{%- when "fr" -%}
 			<a href="{{remoteLicense}}" title="License">
-				{% octicon law %} BSD 3-Clause "New" or "Revised" License (License BSD trois clauses «Nouvelles» ou «Révisé»)
+				{%- comment %}
+					{% octicon law %}
+					{% octicon mark-github %}
+				{% endcomment -%}
+				 BSD 3-Clause "New" or "Revised" License (License BSD trois clauses «Nouvelles» ou «Révisé»)
 			</a><br>
-			<a href="{{remoteURL}}" title="Dépôt GitHub">{% octicon mark-github %} GitHub</a>
+			<a href="{{remoteURL}}" title="Dépôt GitHub"> GitHub</a>
 		{%- else -%}
 			<a href="{{remoteLicense}}" title="License">
-				{% octicon law %} BSD 3-Clause "New" or "Revised" License
+				BSD 3-Clause "New" or "Revised" License
 			</a><br>
-			<a href="{{remoteURL}}" title="GitHub Repository">{% octicon mark-github %} GitHub</a>
+			<a href="{{remoteURL}}" title="GitHub Repository">GitHub</a>
 	{%- endcase -%}
 </footer>
