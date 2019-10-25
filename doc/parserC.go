@@ -9,7 +9,10 @@ import (
 )
 
 var (
-	langC_comment          = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
+	langC_comment = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
+	langC_multCommentBegin = regexp.MustCompile("^\\s*/\\*+\\s*(.*)")
+	langC_multCommentMidle = regexp.MustCompile("^\\s*\\**\\s*(.*)")
+	langC_multCommentEnd   = regexp.MustCompile("^\\s*\\**\\s*(.*?)\\s*\\*/")
 	langC_function         = regexp.MustCompile("^([\\w* ]+\\s+\\w+\\(.*\\))[\\s{]*$")
 	langC_functionName     = regexp.MustCompile("^[\\w* ]+\\s+(\\w+)\\(.*\\).*")
 	langC_Typedef          = regexp.MustCompile("\\s*typedef")
@@ -102,40 +105,54 @@ func langC_parse(index *Index, lines fileLines, fileName string) {
 	}
 }
 
-// get the type of each line, and get get info.
+// Set the type for each line, and remove some caracter
 // ex: "// aaa" --> "aaa"
+// or "int yolo(...) {" --> "int yolo(...)"
 func langC_type(lines fileLines) {
 	skipLines := 0
 	for i, line := range lines {
-		if skipLines > 0 {
-			line.Type = TYPE_CODE
+		switch {
+		case skipLines > 0:
 			skipLines--
 			continue
-		}
-		if langC_comment.MatchString(line.Str) {
+		case langC_multCommentBegin.MatchString(line.Str):
+			line.Type = TYPE_COMMENT
+			line.Str = langC_multCommentBegin.ReplaceAllString(line.Str, "$1")
+			for j, l := range lines[i:] {
+				l.Type = TYPE_COMMENT
+				if langC_multCommentEnd.MatchString(l.Str) {
+					l.Str = langC_multCommentEnd.ReplaceAllString(l.Str, "$1")
+					skipLines = j
+					break
+				} else {
+					l.Str = langC_multCommentMidle.ReplaceAllString(l.Str, "$1")
+				}
+			}
+		case langC_comment.MatchString(line.Str):
 			line.Type = TYPE_COMMENT
 			line.Str = langC_comment.ReplaceAllString(line.Str, "$1")
-		} else if langC_function.MatchString(line.Str) {
+		case langC_function.MatchString(line.Str):
 			line.Type = TYPE_FUNCTION
 			line.Str = langC_function.ReplaceAllString(line.Str, "$1")
-		} else if langC_Typedef.MatchString(line.Str) {
+		case langC_Typedef.MatchString(line.Str):
 			line.Type = TYPE_TYPEDEF
 			for j, l := range lines[i:] {
 				if langC_TypedefMultEnd.MatchString(l.Str) {
+					l.Type = TYPE_CODE
 					skipLines = j
 				}
 			}
-		} else if langC_var.MatchString(line.Str) {
+		case langC_var.MatchString(line.Str):
 			if !langC_keyWord.MatchString(line.Str) {
 				line.Type = TYPE_VAR
 			} else {
 				line.Type = TYPE_CODE
 			}
-		} else if langC_MacroConst.MatchString(line.Str) {
+		case langC_MacroConst.MatchString(line.Str):
 			line.Type = TYPE_MACROCONST
-		} else if langC_MacroFunc.MatchString(line.Str) {
+		case langC_MacroFunc.MatchString(line.Str):
 			line.Type = TYPE_MACROFUNC
-		} else {
+		default:
 			line.Type = TYPE_CODE
 		}
 	}

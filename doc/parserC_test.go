@@ -69,6 +69,15 @@ func TestLangC_Type(t *testing.T) {
 	testType(t, langC_type, []testingLine{
 		{TYPE_COMMENT, "/// aaa", "aaa"},
 		{TYPE_COMMENT, "//", ""},
+
+		{TYPE_COMMENT, "/* aaa", "aaa"},
+		{TYPE_COMMENT, " * aaa", "aaa"},
+		{TYPE_COMMENT, "   aaa", "aaa"},
+		{TYPE_COMMENT, " * aaa */", "aaa"},
+
+		{TYPE_COMMENT, "/* aaa */", "aaa"},
+		{TYPE_COMMENT, "/** aaa */", "aaa"},
+
 		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
 		{TYPE_FUNCTION, "int yolo(f float) {", "int yolo(f float)"},
 		{TYPE_FUNCTION, "* int yolo(f float)", "* int yolo(f float)"},

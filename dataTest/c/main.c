@@ -2,9 +2,11 @@
 
 int yolo6Var = 42 ;
 
-// C'est la fête!
-//
-// The famous main function
+/**
+  * C'est la fête!
+  *
+  * The famous main function
+*/
 int main(int argc, char const *argv[]) {
 	hello();
 	ERR("C'est la merde %d!!!\n", 156);

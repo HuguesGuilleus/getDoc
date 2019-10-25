@@ -36,8 +36,8 @@ func testType(t *testing.T, fx func(fileLines), lines []testingLine) {
 		if l.A != input[i].Str {
 			t.Errorf("String error (line %d)", i)
 			t.Log("   Input line: ", l.B)
-			t.Log("   Expected:", l.A)
-			t.Log("   Received:", input[i].Str)
+			t.Logf("   Expected: '%s'", l.A)
+			t.Logf("   Received: '%s'", input[i].Str)
 		}
 	}
 }
