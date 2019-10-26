@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	langC_comment = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
+	langC_comment          = regexp.MustCompile("^\\s*/{2,}\\s*(.*)")
 	langC_multCommentBegin = regexp.MustCompile("^\\s*/\\*+\\s*(.*)")
 	langC_multCommentMidle = regexp.MustCompile("^\\s*\\**\\s*(.*)")
 	langC_multCommentEnd   = regexp.MustCompile("^\\s*\\**\\s*(.*?)\\s*\\*/")

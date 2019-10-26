@@ -156,7 +156,7 @@ func splitFile(path string) (lines fileLines) {
 }
 
 // Get all the commentary before a num line.
-// A empty commentary procuce a new line ('\n').
+// A empty commentary procuce a new paragraph.
 func (list fileLines) getComment(num int) (comment []string) {
 	begin := num - 1
 	for ; begin > -1; begin-- {
@@ -167,17 +167,20 @@ func (list fileLines) getComment(num int) (comment []string) {
 	if begin == num-1 {
 		return []string{}
 	}
+	begin++
 	builder := strings.Builder{}
-	for begin++; begin < num; begin++ {
-		str := list[begin].Str
-		if len(str) == 0 {
-			comment = append(comment, builder.String())
-			builder.Reset()
+	for beginPara := true; begin < num; begin++ {
+		if s := list[begin].Str; len(s) == 0 {
+			beginPara = true
 		} else {
-			if builder.Len() != 0 {
+			if beginPara == false {
 				builder.WriteRune(' ')
+			} else if builder.Len() != 0 {
+				comment = append(comment, builder.String())
+				builder.Reset()
 			}
-			builder.WriteString(list[begin].Str)
+			builder.WriteString(s)
+			beginPara = false
 		}
 	}
 	return append(comment, builder.String())

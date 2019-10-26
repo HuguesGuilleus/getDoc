@@ -77,56 +77,47 @@ func TestSplitFile(t *testing.T) {
 
 func TestGetComment(t *testing.T) {
 	t.Run("Get Before", func(t *testing.T) {
-		before := []int{
-			TYPE_CODE,
-			TYPE_FUNCTION,
-			TYPE_TYPEDEF,
-		}
-		for _, ty := range before {
-			list := fileLines{
-				&line{
-					Type: ty,
-					Str:  "xxx",
-				},
-				&line{
-					Type: TYPE_COMMENT,
-					Str:  "aaa",
-				},
-				&line{},
-			}
-			assert.Equal(t, []string{"aaa"}, list.getComment(2), "")
-		}
-	})
-	t.Run("Mult Line", func(t *testing.T) {
 		list := fileLines{
-			&line{
-				Type: TYPE_COMMENT,
-				Str:  "aaa",
-			},
-			&line{
-				Type: TYPE_COMMENT,
-				Str:  "",
-			},
-			&line{
-				Type: TYPE_COMMENT,
-				Str:  "bbb",
-			},
-			&line{
-				Type: TYPE_COMMENT,
-				Str:  "ccc",
-			},
+			&line{Str: "xxx"},
+			&line{TYPE_COMMENT, "aaa"},
 			&line{},
 		}
-		assert.Equal(t, []string{"aaa", "bbb ccc"}, list.getComment(4), "")
+		assert.Equal(t, []string{"aaa"}, list.getComment(2))
+	})
+	t.Run("NoComment", func(t *testing.T) {
+		list := fileLines{
+			&line{Str: "xxx"},
+		}
+		assert.Equal(t, []string{}, list.getComment(0))
 	})
 	t.Run("No Comment", func(t *testing.T) {
 		list := fileLines{
-			&line{
-				Type: TYPE_CODE,
-				Str:  "xxx",
-			},
+			&line{TYPE_CODE, "xxx"},
 			&line{},
 		}
-		assert.Equal(t, []string{}, list.getComment(1), "")
+		assert.Equal(t, []string{}, list.getComment(1))
+	})
+	t.Run("MultLine", func(t *testing.T) {
+		list := fileLines{
+			&line{TYPE_COMMENT, "aaa"},
+			&line{TYPE_COMMENT, ""},
+			&line{TYPE_COMMENT, ""},
+			&line{TYPE_COMMENT, "bbb"},
+			&line{TYPE_COMMENT, "ccc"},
+			&line{},
+		}
+		assert.Equal(t, []string{"aaa", "bbb ccc"}, list.getComment(5))
+	})
+	t.Run("Rm Begin,End EmptyLine", func(t *testing.T) {
+		list := fileLines{
+			&line{TYPE_COMMENT, ""},
+			&line{TYPE_COMMENT, "aaa"},
+			&line{TYPE_COMMENT, ""},
+			&line{TYPE_COMMENT, "bbb"},
+			&line{TYPE_COMMENT, "ccc"},
+			&line{TYPE_COMMENT, ""},
+			&line{},
+		}
+		assert.Equal(t, []string{"aaa", "bbb ccc"}, list.getComment(6))
 	})
 }
