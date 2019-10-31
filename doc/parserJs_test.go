@@ -36,6 +36,9 @@ func TestLangJs_type(t *testing.T) {
 	testType(t, langJs_type, []testingLine{
 		{TYPE_COMMENT, "/// aaa", "aaa"},
 		{TYPE_COMMENT, "//", ""},
+		{TYPE_COMMENT, "/**aaa", "aaa"},
+		{TYPE_COMMENT, "bbb*/", "bbb"},
+		{TYPE_COMMENT, "/*aaa*/", "aaa"},
 		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
 		{TYPE_FUNCTION, "function fx() {", "function fx()"},
 		{TYPE_CODE, `xxxfunction fx() {`, `xxxfunction fx() {`},
