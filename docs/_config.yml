@@ -1,5 +1,5 @@
 gems:
-# - jekyll-octicons
+- jekyll-octicons
 # - jekyll-github-metadata
 - jekyll-mentions
 - jekyll-redirect-from

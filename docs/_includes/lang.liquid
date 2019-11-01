@@ -21,7 +21,7 @@
 		{%- if langCode == pageLang -%}
 			<span>{{ langName }}</span>
 		{%- else condition -%}
-			<a href="../{{langCode}}/{{page.name | remove: ".md" }}">{{langName}}</a>
+			<a href="../{{langCode}}/{{page.name | remove: ".md" }}.html">{{langName}}</a>
 		{%- endif -%}
 	{%- endfor -%}
 </div>
