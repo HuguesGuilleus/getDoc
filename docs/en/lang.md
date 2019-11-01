@@ -2,9 +2,7 @@
 title: Supported languages
 ---
 
-`getDoc` split every lines, give a type with regular expressions and select it. It's required a minimum of indentation.
-
-Furthermore, this program is limited to global object.
+`getDoc` split every lines, give a type with regular expressions and select it. It's required a minimum of indentation. Furthermore, this program is limited to global object.
 
 
 ## Comment
@@ -29,7 +27,8 @@ One or more hash: `#` (The shebang are ignored)
 
 ## C
 ### Comment supported for documentation
-More than two slash are also supported: `//`
+- More than two slash are also supported: `// comment`
+- Slash and asterisk: `/* multi mlines comment */`. The line insight the comment can begin by space an asterisk.
 
 ### Supported element:
 - Function (global) (`func`)
@@ -50,7 +49,8 @@ More than two slash are also supported: `//`
 
 ## Javascript
 ### Comment supported for documentation
-More than two slash are also supported: `//`
+- More than two slash are also supported: `// comment`
+- Slash and asterisk: `/* multi mlines comment */`. The line insight the comment can begin by space an asterisk.
 
 ### Supported element:
 - Function (global) (`func`)
