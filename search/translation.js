@@ -19,9 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // translate apply the translation for a specific language
 function translate(trad, lang) {
 	document.documentElement.lang = lang;
-	// updateNotifText
-	document.getElementById("updateNotifText").textContent =
-		trad.querySelector("#updateNotifTextTrad").textContent;
 	// inputSearch
 	document.getElementById("searchInput").placeholder =
 		trad.querySelector("#placeholder").textContent;
