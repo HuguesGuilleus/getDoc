@@ -41,7 +41,7 @@ function search() {
 	}
 }
 
-// Parse the string from inout element and return an object
+// Parse the string from inpout element and return an object.
 function searchParse(input) {
 	searchInputArray = input.split(/\s+/);
 	searchActList = {
@@ -128,14 +128,14 @@ function searchReset() {
 
 // Reset an simple elem
 function searchResetElement(el) {
-	var list = el.getElementsByClassName("find");
-	if (list.length) {
-		var text = el.textContent;
-		for (let find of list) {
-			find.remove();
-		}
-		el.textContent = text;
-	}
+	// var list = el.getElementsByClassName("find");
+	// if (list.length) {
+	// 	const  text = el.textContent;
+	// 	for (let find of list) {
+	// 		find.remove();
+	// 	}
+	// 	el.textContent = text;
+	// }
 }
 
 // Search in the list of element, hidden the not found item
@@ -156,11 +156,11 @@ function searchElement() {
 // It return -10 if the tab if not empty and the pattern not found,
 // return 1 if there are a match, and return 0 if tab is empty and not found
 function searchMatch(el, finder) {
-	if (finder.pat.test(el.textContent)) {
-		el.innerHTML = el.textContent.replace(finder.pat, '<span class=find>$1</span>');
+	if (finder.pat.test(el.innerText)) {
+		// el.innerHTML = el.textContent.replace(finder.pat, '<span class=find>$1</span>');
 		return 1;
 	} else {
-		searchResetElement(el);
+		// searchResetElement(el);
 		return -10 * finder.notFound;
 	}
 }
