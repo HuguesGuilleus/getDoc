@@ -15,6 +15,11 @@ func TestLangC_parse(t *testing.T) {
 		LineName: "int hello()",
 		Type:     "func",
 	})
+	testParser(t, "Function", []string{"int *hello() {"}, Element{
+		Name:     "hello",
+		LineName: "int *hello()",
+		Type:     "func",
+	})
 	testParser(t, "MacroConst", []string{"#define YOLO 14"}, Element{
 		Name:     "YOLO",
 		LineName: "#define YOLO 14",
@@ -80,7 +85,6 @@ func TestLangC_Type(t *testing.T) {
 
 		{TYPE_CODE, "	a = 4.2 ;", "	a = 4.2 ;"},
 		{TYPE_FUNCTION, "int yolo(f float) {", "int yolo(f float)"},
-		{TYPE_FUNCTION, "* int yolo(f float)", "* int yolo(f float)"},
 		{TYPE_TYPEDEF, "typedef int bool ;", "typedef int bool ;"},
 		{TYPE_MACROCONST, "#define YOLO 42", "#define YOLO 42"},
 		{TYPE_MACROFUNC, "#define ERR(xxx ...)	fprintf(stderr, xxx)", "#define ERR(xxx ...)	fprintf(stderr, xxx)"},
