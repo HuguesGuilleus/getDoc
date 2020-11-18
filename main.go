@@ -1,5 +1,5 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019-2020 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
 package main
@@ -17,7 +17,7 @@ var spec = &parseOpt.SpecList{
 		NameLong: "version",
 		Desc:     "Print the version",
 		CBFlag: func() {
-			fmt.Printf("getDoc VERSION: %.2f\n", 1.07)
+			fmt.Printf("getDoc VERSION: %.2f\n", 1.08)
 			fmt.Println("  BSD 3-Clause License")
 			os.Exit(0)
 		},
