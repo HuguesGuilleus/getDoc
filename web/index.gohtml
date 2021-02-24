@@ -83,7 +83,7 @@
 					<div class="fileRef">{{- .FileName }}:{{ .LineNum -}}</div>
 					<div class="lang">{{- .Lang -}}</div>
 				</div>
-				<code class="lineName">{{ html .LineName }}</code>
+				<code class="lineName">{{ .LineName }}</code>
 				{{- range .Comment }}
 				<p class="comment">{{.}}</p>
 				{{- end }}
