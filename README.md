@@ -11,7 +11,7 @@ Language: English, Français
 ```bash
 git clone https://github.com/HuguesGuilleus/getDoc
 cd getDoc
-./build
+go build
 ```
 
 You can also use binary: [https://github.com/HuguesGuilleus/getDoc/releases](https://github.com/HuguesGuilleus/getDoc/releases)

@@ -7,7 +7,7 @@ package doc
 import (
 	"encoding/json"
 	"encoding/xml"
-	"github.com/HuguesGuilleus/getDoc/doc/data"
+	"github.com/HuguesGuilleus/getDoc/web"
 	"log"
 	"os"
 	"path/filepath"
@@ -19,7 +19,7 @@ func (ind *Index) SaveHTML(path string) {
 	ind.sort()
 	file := writeFile(path, "doc.html")
 	defer file.Close()
-	panicing(data.Index.Execute(file, ind))
+	panicing(webdata.Index.Execute(file, ind))
 	log.Print("SAVE IN HTML: ", file.Name())
 }
 

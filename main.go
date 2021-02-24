@@ -6,7 +6,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/HuguesGuilleus/getDoc/doc"
+	"github.com/HuguesGuilleus/getDoc/pkg"
 	"github.com/HuguesGuilleus/parseOpt"
 	"log"
 	"os"
