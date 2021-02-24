@@ -5,8 +5,8 @@
 package main
 
 import (
-	"./doc"
 	"fmt"
+	"github.com/HuguesGuilleus/getDoc/doc"
 	"github.com/HuguesGuilleus/parseOpt"
 	"log"
 	"os"

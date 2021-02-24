@@ -5,9 +5,9 @@
 package doc
 
 import (
-	"./data"
 	"encoding/json"
 	"encoding/xml"
+	"github.com/HuguesGuilleus/getDoc/doc/data"
 	"log"
 	"os"
 	"path/filepath"
