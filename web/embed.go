@@ -3,7 +3,9 @@ package webdata
 import (
 	"bytes"
 	"embed"
+	"github.com/HuguesGuilleus/static.v3"
 	"html/template"
+	"io/fs"
 )
 
 var (
@@ -18,7 +20,23 @@ var (
 )
 
 func init() {
-	index = bytes.Replace(index, []byte("/*STYLE*/"), readFs(styleFS), 1)
-	index = bytes.Replace(index, []byte("/*JS*/"), readFs(jsFS), 1)
+	index = bytes.Replace(index, []byte("/*STYLE*/"), readFs(styleFS, static.CssMinify), 1)
+	index = bytes.Replace(index, []byte("/*JS*/"), readFs(jsFS, static.JsMinify), 1)
 	Index = template.Must(template.New("index").Parse(string(index)))
+}
+
+func readFs(s fs.FS, m static.Minifier) []byte {
+	var buff bytes.Buffer
+	fs.WalkDir(s, ".", func(path string, d fs.DirEntry, err error) error {
+		if d.IsDir() {
+			return nil
+		}
+		f, err := fs.ReadFile(s, path)
+		if err != nil {
+			panic(err)
+		}
+		buff.Write(m(f))
+		return nil
+	})
+	return buff.Bytes()
 }
