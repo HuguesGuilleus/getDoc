@@ -1,109 +1,81 @@
 // getDoc
-// 2019-2020 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/HuguesGuilleus/getDoc/pkg"
-	"github.com/HuguesGuilleus/parseOpt"
+	"io"
 	"log"
 	"os"
+	"runtime/debug"
+	"strings"
 )
 
-var spec = &parseOpt.SpecList{
-	&parseOpt.Spec{
-		NameLong: "version",
-		Desc:     "Print the version",
-		CBFlag: func() {
-			fmt.Printf("getDoc VERSION: %.2f\n", 1.08)
-			fmt.Println("  BSD 3-Clause License")
-			os.Exit(0)
-		},
-	},
-	&parseOpt.Spec{
-		NameShort: "l",
-		NameLong:  "lang",
-		Desc:      "List all supported programming languages",
-		CBFlag: func() {
-			log.Println("LANGUAGE:")
-			for _, lang := range []string{"bash", "c", "go", "js"} {
-				fmt.Println("  -", lang)
-			}
-			fmt.Println("  More datail on Github")
-			os.Exit(0)
-		},
-	},
-	&parseOpt.Spec{
-		NameShort: "v",
-		NameLong:  "verbose",
-		Desc:      "Verbose Mode",
-		CBFlag: func() {
-			log.SetOutput(os.Stdout)
-		},
-	},
-	&parseOpt.Spec{
-		NameShort:  "o",
-		NameLong:   "output",
-		Desc:       "Set html output file",
-		OptionName: "file.html",
-		NeedArg:    true,
-	},
-	&parseOpt.Spec{
-		NameShort:  "j",
-		NameLong:   "json",
-		OptionName: "file.json",
-		Desc:       "Set json output file",
-		NeedArg:    true,
-	},
-	&parseOpt.Spec{
-		NameShort:  "x",
-		NameLong:   "xml",
-		OptionName: "file.xml",
-		Desc:       "Set xml output file",
-		NeedArg:    true,
-	},
-	&parseOpt.Spec{
-		NameShort: "d",
-		NameLong:  "debug",
-		Desc:      "Only list the type of each lines",
-		NeedArg:   false,
-	},
-}
+var (
+	printVersion = flag.Bool("version", false, "Print the version")
+	verbose      = flag.Bool("v", false, "Enable verbose mode")
+	output       = flag.String("o", "doc.html", "The output file (use extesion to get the output format: HTML(default), JSON or XML)")
+	listLine     = flag.Bool("debug", false, "Only list the type of each lines")
+)
 
 func main() {
-	opt := spec.ParseOs()
-	if opt.Flag["debug"] {
-		doc.ReadDebug(opt.Option[""])
-	} else {
-		// Read file
-		var ind *doc.Index
-		if len(opt.Option[""]) == 0 {
-			ind = doc.Read(".")
+	flag.Usage = func() {
+		fmt.Println("Usage of getDoc: [OPTION] [inputs]")
+		fmt.Println()
+		fmt.Println("Inputs can be directorys or files, by default is the")
+		fmt.Println("current directory. Directory are readed recurively.")
+		fmt.Println()
+		log.Println("SUPORTED LANGUAGES:")
+		for _, lang := range []string{"bash", "c", "go", "js"} {
+			fmt.Println("  -", lang)
+		}
+		fmt.Println()
+
+		fmt.Println("OPTIONS:")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
+	if *printVersion {
+		if info, _ := debug.ReadBuildInfo(); info != nil {
+			fmt.Println("getDoc", info.Main.Version)
+			fmt.Println(info.Main.Sum)
 		} else {
-			ind = &doc.Index{}
-			for _, file := range opt.Option[""] {
-				*ind = append(*ind, *doc.Read(file)...)
-			}
+			fmt.Println("getDoc unkown version")
 		}
-		// Save the HTML
-		if len(opt.Option["output"]) != 0 {
-			for _, out := range opt.Option["output"] {
-				ind.SaveHTML(out)
-			}
-		} else if len(opt.Option["json"]) == 0 && len(opt.Option["xml"]) == 0 {
-			ind.SaveHTML("doc.html")
+		return
+	} else if *listLine {
+		doc.ReadDebug(flag.Args())
+		return
+	}
+
+	if *verbose {
+		log.SetPrefix("--- ")
+		log.SetFlags(0)
+		log.SetOutput(os.Stdout)
+	} else {
+		log.SetOutput(io.Discard)
+	}
+
+	var ind doc.Index
+	if args := flag.Args(); len(args) == 0 {
+		ind = *doc.Read(".")
+	} else {
+		for _, a := range args {
+			ind = append(ind, *doc.Read(a)...)
 		}
-		// Save in JSON and XML
-		if len(opt.Option["json"]) != 0 || len(opt.Option["xml"]) != 0 {
-			data := ind.DataIndex()
-			for _, file := range opt.Option["json"] {
-				data.Json(file)
-			}
-			for _, file := range opt.Option["xml"] {
-				data.Xml(file)
-			}
-		}
+	}
+
+	switch {
+	case strings.HasSuffix(*output, ".json"):
+		ind.DataIndex().Json(*output)
+	case strings.HasSuffix(*output, ".xml"):
+		ind.DataIndex().Xml(*output)
+	default:
+		ind.SaveHTML(*output)
 	}
 }
