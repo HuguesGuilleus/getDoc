@@ -8,9 +8,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/HuguesGuilleus/getDoc/pkg"
-	"io"
 	"log"
 	"os"
+	"path"
 	"runtime/debug"
 	"strings"
 )
@@ -19,6 +19,7 @@ var (
 	printVersion = flag.Bool("version", false, "Print the version")
 	verbose      = flag.Bool("v", false, "Enable verbose mode")
 	output       = flag.String("o", "doc.html", "The output file (use extesion to get the output format: HTML(default), JSON or XML)")
+	title        = flag.String("t", "", "The title of this doc")
 	listLine     = flag.Bool("debug", false, "Only list the type of each lines")
 )
 
@@ -53,23 +54,29 @@ func main() {
 		return
 	}
 
+	var d doc.Doc
+
 	if *verbose {
-		log.SetPrefix("--- ")
-		log.SetFlags(0)
-		log.SetOutput(os.Stdout)
-	} else {
-		log.SetOutput(io.Discard)
+		d.Log.SetPrefix("--- ")
+		d.Log.SetOutput(os.Stdout)
 	}
 
-	var ind doc.Index
+	if *title == "" {
+		d.Title = path.Clean(flag.Arg(0))
+	} else {
+		d.Title = *title
+	}
+
 	if args := flag.Args(); len(args) == 0 {
-		ind = *doc.Read(".")
+		d.Read(".", os.DirFS("."))
 	} else {
 		for _, a := range args {
-			ind = append(ind, *doc.Read(a)...)
+			d.Read(a, os.DirFS(a))
 		}
 	}
 
+	ind := &d.Index
+	doc.Title = d.Title
 	switch {
 	case strings.HasSuffix(*output, ".json"):
 		ind.DataIndex().Json(*output)
