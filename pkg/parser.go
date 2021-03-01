@@ -4,10 +4,6 @@
 
 package doc
 
-import (
-	"sync"
-)
-
 const (
 	TYPE_NODEF      = 0
 	TYPE_COMMENT    = 1
@@ -68,6 +64,3 @@ var parserList = map[string]*parserFuncs{
 		Type:  langGo_type,
 	},
 }
-
-// Simple secure for the list
-var parserListMutex sync.Mutex

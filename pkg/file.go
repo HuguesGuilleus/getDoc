@@ -135,8 +135,6 @@ func getExt(path string) string {
 // return the parser for the lang. If there are no parser,
 // the function return nil
 func langKnown(path string) *parserFuncs {
-	parserListMutex.Lock()
-	defer parserListMutex.Unlock()
 	return parserList[getExt(path)]
 }
 
