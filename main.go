@@ -75,14 +75,18 @@ func main() {
 		}
 	}
 
-	ind := &d.Index
-	doc.Title = d.Title
+	out, err := os.Create(*output)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Create file for save output %q fail: %v\n", *output, err)
+		os.Exit(1)
+	}
+	defer out.Close()
 	switch {
 	case strings.HasSuffix(*output, ".json"):
-		ind.DataIndex().Json(*output)
+		d.SaveJSON(out)
 	case strings.HasSuffix(*output, ".xml"):
-		ind.DataIndex().Xml(*output)
+		d.SaveXML(out)
 	default:
-		ind.SaveHTML(*output)
+		d.SaveHTML(out)
 	}
 }

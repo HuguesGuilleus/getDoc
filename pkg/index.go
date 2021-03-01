@@ -5,6 +5,9 @@
 package doc
 
 import (
+	"encoding/json"
+	"encoding/xml"
+	"github.com/HuguesGuilleus/getDoc/web"
 	"io"
 	"io/fs"
 	"log"
@@ -22,7 +25,7 @@ type Doc struct {
 	Index Index
 
 	// The logger. To print nothing: SetOutput(io.Discard)
-	Log log.Logger
+	Log log.Logger `json:"-" xml:"-"`
 }
 
 // Init the doc information for safe use.
@@ -77,4 +80,31 @@ func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser *p
 	parser.Parse(&d.Index, lines, p)
 
 	d.Log.Println("Read", p)
+}
+
+func (d *Doc) SaveHTML(w io.Writer) error {
+	d.save(w, "HTML")
+	return webdata.Index.Execute(w, &d.Index)
+}
+func (d *Doc) SaveJSON(w io.Writer) error {
+	d.save(w, "JSON")
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "\t")
+	return enc.Encode(d)
+}
+func (d *Doc) SaveXML(w io.Writer) error {
+	d.save(w, "XML")
+	enc := xml.NewEncoder(w)
+	enc.Indent("", "\t")
+	return enc.Encode(d)
+}
+
+// Log the output save and sort the index.
+func (d *Doc) save(w interface{}, format string) {
+	if n, ok := w.(interface{ Name() string }); ok {
+		d.Log.Printf("Save in %s in %q", format, n.Name())
+	} else {
+		d.Log.Println("Save in", format)
+	}
+	d.Index.sort()
 }
