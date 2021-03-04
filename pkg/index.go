@@ -7,12 +7,12 @@ package doc
 import (
 	"encoding/json"
 	"encoding/xml"
+	"github.com/HuguesGuilleus/getDoc/pkg/parser"
 	"github.com/HuguesGuilleus/getDoc/web"
 	"io"
 	"io/fs"
 	"log"
 	"path"
-	"strings"
 	"sync"
 	"time"
 )
@@ -22,7 +22,7 @@ type Doc struct {
 	Title string
 	Time  time.Time
 
-	Index Index
+	Index []*parser.Element
 
 	// The logger. To print nothing: SetOutput(io.Discard)
 	Log log.Logger `json:"-" xml:"-"`
@@ -39,7 +39,7 @@ func (d *Doc) init() {
 }
 
 // Get the documentation from files.
-func (d *Doc) Read(root string, fsys fs.FS) error {
+func (d *Doc) Read(fsys fs.FS) error {
 	var wg sync.WaitGroup
 	defer wg.Wait()
 
@@ -50,34 +50,39 @@ func (d *Doc) Read(root string, fsys fs.FS) error {
 			return nil
 		}
 
-		parser := parserList[strings.TrimPrefix(path.Ext(p), ".")]
+		parser := Parsers[path.Ext(p)]
 		if parser == nil {
 			return nil
 		}
 		wg.Add(1)
-		go d.readFile(fsys, root, p, &wg, parser)
+		go d.readFile(fsys, p, &wg, parser)
 
 		return nil
 	})
 }
 
-func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser *parserFuncs) {
+func (d *Doc) readFile(fsys fs.FS, p string, wg *sync.WaitGroup, getParser parser.GenParser) {
 	defer wg.Done()
 
-	f, err := fs.ReadFile(fsys, p)
+	f, err := fsys.Open(p)
 	if err != nil {
 		d.Log.Printf("Read %q fail: %v\n", p, err)
 		return
 	}
+	defer f.Close()
 
-	splited := strings.Split(string(f), "\n")
-	lines := make(fileLines, len(splited), len(splited))
-	for i, l := range splited {
-		lines[i] = &line{Str: l}
+	par := getParser(f, p)
+	for {
+		if e := par.Next(); e != nil {
+			d.Index = append(d.Index, e)
+		} else {
+
+			break
+		}
 	}
-
-	parser.Type(lines)
-	parser.Parse(&d.Index, lines, p)
+	if err := par.Error(); err != nil {
+		d.Log.Printf("Error from %q: %v\n", p, err)
+	}
 
 	d.Log.Println("Read", p)
 }
@@ -106,5 +111,6 @@ func (d *Doc) save(w interface{}, format string) {
 	} else {
 		d.Log.Println("Save in", format)
 	}
-	d.Index.sort()
+	// d.Index.sort()
+	// TODO: sort Element
 }
