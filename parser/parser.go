@@ -1,8 +1,13 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
-package doc
+package parser
+
+import (
+	"io"
+	"strings"
+)
 
 const (
 	TYPE_NODEF      = 0
@@ -29,8 +34,6 @@ var nameType = map[int]string{
 	8: "CLASS",
 	9: "VAR",
 }
-
-type parserFunc func(index *Index, lines fileLines, fileName string)
 
 // A parser for one language
 type parserFuncs struct {
@@ -63,4 +66,32 @@ var parserList = map[string]*parserFuncs{
 		Parse: langGo_parse,
 		Type:  langGo_type,
 	},
+}
+
+func parserFuncs2Parser(pf *parserFuncs) Parser {
+	return func(path string, r io.Reader, index *Index) error {
+		data, err := io.ReadAll(r)
+		if err != nil {
+			return err
+		}
+
+		splited := strings.Split(string(data), "\n")
+		lines := make(fileLines, len(splited), len(splited))
+		for i, l := range splited {
+			lines[i] = &line{Str: l}
+		}
+		pf.Type(lines)
+		pf.Parse(index, lines, path)
+
+		return nil
+	}
+}
+
+// Remove in the furture
+func GetParserList() map[string]Parser {
+	ParserList := make(map[string]Parser, len(parserList))
+	for lang, pf := range parserList {
+		ParserList[lang] = parserFuncs2Parser(pf)
+	}
+	return ParserList
 }

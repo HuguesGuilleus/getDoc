@@ -1,8 +1,8 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
-package doc
+package parser
 
 import (
 	"testing"

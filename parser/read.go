@@ -1,8 +1,8 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
-package doc
+package parser
 
 import (
 	"fmt"
@@ -12,15 +12,11 @@ import (
 	"sync"
 )
 
-var Title string = ""
-
 // Read a file or a directory
 func Read(root string) (ind *Index) {
 	ind = &Index{}
 	wg := &sync.WaitGroup{}
 	defer wg.Wait()
-	wg.Add(1)
-	go getTitle(root, wg)
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		defer rec()
 		panicing(err)
@@ -64,14 +60,6 @@ func ReadDebug(roots []string) {
 			return nil
 		})
 	}
-}
-
-// Get the name of the file or directory
-func getTitle(path string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	path, err := filepath.Abs(path)
-	printErr(err)
-	Title = filepath.Base(path)
 }
 
 // recover and print the error

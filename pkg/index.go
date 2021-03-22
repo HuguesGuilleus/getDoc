@@ -7,6 +7,7 @@ package doc
 import (
 	"encoding/json"
 	"encoding/xml"
+	"github.com/HuguesGuilleus/getDoc/parser"
 	"github.com/HuguesGuilleus/getDoc/web"
 	"io"
 	"io/fs"
@@ -22,7 +23,10 @@ type Doc struct {
 	Title string
 	Time  time.Time
 
-	Index Index
+	Index    parser.Index
+	ListFile []string
+	ListLang []string
+	ListType []string
 
 	// The logger. To print nothing: SetOutput(io.Discard)
 	Log log.Logger `json:"-" xml:"-"`
@@ -40,6 +44,8 @@ func (d *Doc) init() {
 
 // Get the documentation from files.
 func (d *Doc) Read(root string, fsys fs.FS) error {
+	d.init()
+
 	var wg sync.WaitGroup
 	defer wg.Wait()
 
@@ -50,7 +56,7 @@ func (d *Doc) Read(root string, fsys fs.FS) error {
 			return nil
 		}
 
-		parser := parserList[strings.TrimPrefix(path.Ext(p), ".")]
+		parser := ParserList[strings.TrimPrefix(path.Ext(p), ".")]
 		if parser == nil {
 			return nil
 		}
@@ -61,30 +67,26 @@ func (d *Doc) Read(root string, fsys fs.FS) error {
 	})
 }
 
-func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser *parserFuncs) {
+func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser parser.Parser) {
 	defer wg.Done()
 
-	f, err := fs.ReadFile(fsys, p)
+	f, err := fsys.Open(p)
 	if err != nil {
-		d.Log.Printf("Read %q fail: %v\n", p, err)
+		d.Log.Printf("[ERROR] %q fail: %v\n", p, err)
 		return
 	}
+	defer f.Close()
 
-	splited := strings.Split(string(f), "\n")
-	lines := make(fileLines, len(splited), len(splited))
-	for i, l := range splited {
-		lines[i] = &line{Str: l}
+	d.Log.Println("[READ]", p)
+	if err := parser(p, f, &d.Index); err != nil {
+		d.Log.Printf("[ERROR] parse %q fail: %v\n", p, err)
+		return
 	}
-
-	parser.Type(lines)
-	parser.Parse(&d.Index, lines, p)
-
-	d.Log.Println("Read", p)
 }
 
 func (d *Doc) SaveHTML(w io.Writer) error {
 	d.save(w, "HTML")
-	return webdata.Index.Execute(w, &d.Index)
+	return webdata.Index.Execute(w, d)
 }
 func (d *Doc) SaveJSON(w io.Writer) error {
 	d.save(w, "JSON")
@@ -102,9 +104,10 @@ func (d *Doc) SaveXML(w io.Writer) error {
 // Log the output save and sort the index.
 func (d *Doc) save(w interface{}, format string) {
 	if n, ok := w.(interface{ Name() string }); ok {
-		d.Log.Printf("Save in %s in %q", format, n.Name())
+		d.Log.Printf("[SAVE:%s] %s\n", format, n.Name())
 	} else {
-		d.Log.Println("Save in", format)
+		d.Log.Printf("[SAVE:%s]\n", format)
 	}
-	d.Index.sort()
+	// TODO: sort the Index
+	// d.Index.sort()
 }

@@ -1,21 +1,22 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
-package doc
+package parser
 
 import (
+	"io"
 	"io/ioutil"
 	"regexp"
-	"sort"
 	"strings"
-	"time"
 )
 
 var (
 	getExtDot   = regexp.MustCompile(".*\\.(\\w+)$")
 	getExtSlash = regexp.MustCompile(".*/(\\w+)$")
 )
+
+type Parser func(path string, r io.Reader, index *Index) error
 
 // On element: function, var, typedef, class ...
 type Element struct {
@@ -41,77 +42,6 @@ type Index []*Element
 // push a element to an Index
 func (ind *Index) push(el *Element) {
 	*ind = append(*ind, el)
-}
-
-// Sort the Index of element by the Name
-func (ind Index) sort() {
-	sort.Slice(ind, func(i, j int) bool {
-		return ind[i].Name < ind[j].Name
-	})
-}
-
-// List all file who have an element of the list.
-// The return list are sorted and all file are uniq
-func (ind Index) ListFile() (files []string) {
-	all := []string{}
-	for _, el := range ind {
-		all = append(all, el.FileName)
-	}
-	return uniq(all)
-}
-
-// List all file who have an element of the list.
-// The return list are sorted and all file are uniq
-func (ind Index) ListType() (files []string) {
-	all := []string{}
-	for _, el := range ind {
-		all = append(all, el.Type)
-	}
-	return uniq(all)
-}
-
-// List all file who have an element of the list.
-// The return list are sorted and all file are uniq
-func (ind Index) ListLang() (out []string) {
-	all := []string{}
-	for _, el := range ind {
-		all = append(all, el.Lang)
-	}
-	return uniq(all)
-}
-
-// Sort and remove double string
-func uniq(in []string) (out []string) {
-	sort.Strings(in)
-	last := ""
-	for _, item := range in {
-		if item != last {
-			out = append(out, item)
-			last = item
-		}
-	}
-	return out
-}
-
-// Get the time of the parse for use with JSON
-func (ind *Index) Date() string {
-	dataTime, err := time.Now().MarshalJSON()
-	if err != nil {
-		printErr(err)
-		return ""
-	}
-	dataTime = dataTime[1 : len(dataTime)-1]
-	return string(dataTime)
-}
-
-// Get the date for humain
-func (_ *Index) HumainDate() string {
-	return time.Now().Format("2006-01-02 15:04:05")
-}
-
-// Get the Title for <h1> in template
-func (_ *Index) Title() string {
-	return Title
 }
 
 // One line with her type and the content

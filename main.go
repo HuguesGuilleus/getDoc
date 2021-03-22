@@ -20,7 +20,6 @@ var (
 	verbose      = flag.Bool("v", false, "Enable verbose mode")
 	output       = flag.String("o", "doc.html", "The output file (use extesion to get the output format: HTML(default), JSON or XML)")
 	title        = flag.String("t", "", "The title of this doc")
-	listLine     = flag.Bool("debug", false, "Only list the type of each lines")
 )
 
 func main() {
@@ -48,9 +47,6 @@ func main() {
 		} else {
 			fmt.Println("getDoc unkown version")
 		}
-		return
-	} else if *listLine {
-		doc.ReadDebug(flag.Args())
 		return
 	}
 
@@ -81,12 +77,20 @@ func main() {
 		os.Exit(1)
 	}
 	defer out.Close()
+
+	failSave := func(err error) {
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Save the doc fail: ", err)
+			os.Exit(1)
+		}
+	}
+
 	switch {
 	case strings.HasSuffix(*output, ".json"):
-		d.SaveJSON(out)
+		failSave(d.SaveJSON(out))
 	case strings.HasSuffix(*output, ".xml"):
-		d.SaveXML(out)
+		failSave(d.SaveXML(out))
 	default:
-		d.SaveHTML(out)
+		failSave(d.SaveHTML(out))
 	}
 }

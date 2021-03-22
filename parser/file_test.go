@@ -1,8 +1,8 @@
 // getDoc
-// 2019 GUILLEUS Hugues <ghugues@netc.fr>
+// 2019, 2021 GUILLEUS Hugues <ghugues@netc.fr>
 // BSD 3-Clause "New" or "Revised" License
 
-package doc
+package parser
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -19,15 +19,6 @@ func TestIndexPush(t *testing.T) {
 	if len(*ind) == 1 {
 		assert.Equal(t, el, (*ind)[0], "The first Element")
 	}
-}
-
-func TestListFile(t *testing.T) {
-	ind := Index{
-		&Element{FileName: "yolo"},
-		&Element{FileName: "swag"},
-		&Element{FileName: "swag"},
-	}
-	assert.Equal(t, []string{"swag", "yolo"}, ind.ListFile(), "")
 }
 
 func TestGetExt(t *testing.T) {
@@ -62,7 +53,7 @@ func TestSplitFile(t *testing.T) {
 			&line{Str: "// File for test"},
 			&line{Str: "aaa"},
 			&line{},
-		}, splitFile("../dataTest/split.c"), "")
+		}, splitFile("../../dataTest/split.c"), "")
 	})
 	t.Run("NoFile", func(t *testing.T) {
 		defer func() {
