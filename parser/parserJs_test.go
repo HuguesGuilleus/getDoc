@@ -8,28 +8,34 @@ import (
 	"testing"
 )
 
-func TestLangJs_parse(t *testing.T) {
-	testingFile = "a.js"
-	testParser(t, "function", []string{"function fx() {"}, Element{
+func TestLangJs(t *testing.T) {
+	TestParserOne(t, "function", LangJs, Element{
 		Name:     "fx",
-		LineName: "function fx()",
+		LineName: `function fx()`,
 		Type:     "func",
-	})
-	testParser(t, "class", []string{"class Yolo {"}, Element{
+		LineNum:  2,
+		Comment:  []string{"Comment"},
+	}, `// Comment
+function fx() {
+}`)
+	TestParserOne(t, "class", LangJs, Element{
 		Name:     "Yolo",
-		LineName: "class Yolo",
+		LineName: `class Yolo`,
 		Type:     "class",
-	})
-	testParser(t, "var", []string{`var swag = 1559;`}, Element{
+		LineNum:  1,
+	}, `class Yolo {`)
+	TestParserOne(t, "var", LangJs, Element{
 		Name:     "swag",
-		LineName: "var swag = 1559;",
+		LineName: `var swag = 1559;`,
 		Type:     "var",
-	})
-	testParser(t, "const", []string{"const SWAG = 1559;"}, Element{
+		LineNum:  1,
+	}, `var swag = 1559;`)
+	TestParserOne(t, "const", LangJs, Element{
 		Name:     "SWAG",
-		LineName: "const SWAG = 1559;",
+		LineName: `const SWAG = 1559;`,
 		Type:     "const",
-	})
+		LineNum:  1,
+	}, `const SWAG = 1559;`)
 }
 
 func TestLangJs_type(t *testing.T) {

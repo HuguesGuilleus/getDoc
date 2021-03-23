@@ -8,6 +8,11 @@ import (
 	"regexp"
 )
 
+var LangJs = parserFuncs2Parser(&parserFuncs{
+	Parse: langJs_parse,
+	Type:  langJs_type,
+})
+
 var (
 	langJs_comment          = regexp.MustCompile(`\s*/{2,}\s*(.*)`)
 	langJs_multCommentBegin = regexp.MustCompile(`^\s*/\*+\s*`)
