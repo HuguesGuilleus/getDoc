@@ -31,41 +31,6 @@ func TestGetExt(t *testing.T) {
 	assert.Equal(t, "", getExt(""), "Input: <nothing>")
 }
 
-func TestLangKnown(t *testing.T) {
-	parserListSave := parserList
-	defer func() { parserList = parserListSave }()
-	langA := &parserFuncs{}
-	parserList = map[string]*parserFuncs{
-		"a": langA,
-		"b": &parserFuncs{},
-	}
-	if langKnown("zzz/xxx.a") != langA {
-		t.Error("A known lang")
-	}
-	if langKnown("xxx/yyy.zz") != nil {
-		t.Error("langKnown with unknwolang must return nil", langKnown("zz"))
-	}
-}
-
-func TestSplitFile(t *testing.T) {
-	t.Run("Normal", func(t *testing.T) {
-		assert.Equal(t, fileLines{
-			&line{Str: "// File for test"},
-			&line{Str: "aaa"},
-			&line{},
-		}, splitFile("../../dataTest/split.c"), "")
-	})
-	t.Run("NoFile", func(t *testing.T) {
-		defer func() {
-			if recover() == nil {
-				t.Error("The function must panic a err")
-			}
-		}()
-		splitFile("dataTest/_")
-		t.Error("The function must panic")
-	})
-}
-
 func TestGetComment(t *testing.T) {
 	t.Run("Get Before", func(t *testing.T) {
 		list := fileLines{

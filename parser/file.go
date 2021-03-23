@@ -6,7 +6,6 @@ package parser
 
 import (
 	"io"
-	"io/ioutil"
 	"regexp"
 	"strings"
 )
@@ -60,27 +59,6 @@ func getExt(path string) string {
 	} else {
 		return getExtSlash.ReplaceAllString(path, "$1")
 	}
-}
-
-// return the parser for the lang. If there are no parser,
-// the function return nil
-func langKnown(path string) *parserFuncs {
-	return parserList[getExt(path)]
-}
-
-// Read and split file in a string for each line. If error, panic.
-func splitFile(path string) (lines fileLines) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		panic(err)
-	}
-	for _, str := range strings.Split(string(data), "\n") {
-		lines = append(lines, &line{
-			Type: TYPE_NODEF,
-			Str:  str,
-		})
-	}
-	return
 }
 
 // Get all the commentary before a num line.
