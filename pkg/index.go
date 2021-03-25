@@ -84,20 +84,28 @@ func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser pa
 	}
 }
 
-func (d *Doc) SaveHTML(w io.Writer) error {
+func (d *Doc) SaveHTML(w io.Writer, indent bool) error {
 	d.save(w, "HTML")
-	return webdata.Index.Execute(w, d)
+	if indent {
+		return webdata.IndexStd.Execute(w, d)
+	} else {
+		return webdata.IndexMin.Execute(w, d)
+	}
 }
-func (d *Doc) SaveJSON(w io.Writer) error {
+func (d *Doc) SaveJSON(w io.Writer, indent bool) error {
 	d.save(w, "JSON")
 	enc := json.NewEncoder(w)
-	enc.SetIndent("", "\t")
+	if indent {
+		enc.SetIndent("", "\t")
+	}
 	return enc.Encode(d)
 }
-func (d *Doc) SaveXML(w io.Writer) error {
+func (d *Doc) SaveXML(w io.Writer, indent bool) error {
 	d.save(w, "XML")
 	enc := xml.NewEncoder(w)
-	enc.Indent("", "\t")
+	if indent {
+		enc.Indent("", "\t")
+	}
 	return enc.Encode(d)
 }
 

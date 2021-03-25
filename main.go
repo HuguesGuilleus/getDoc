@@ -20,6 +20,7 @@ var (
 	verbose      = flag.Bool("v", false, "Enable verbose mode")
 	output       = flag.String("o", "doc.html", "The output file (use extesion to get the output format: HTML(default), JSON or XML)")
 	title        = flag.String("t", "", "The title of this doc")
+	indent       = flag.Bool("indent", false, "Enable indent for JSON, XML and HTML")
 )
 
 func main() {
@@ -87,10 +88,10 @@ func main() {
 
 	switch {
 	case strings.HasSuffix(*output, ".json"):
-		failSave(d.SaveJSON(out))
+		failSave(d.SaveJSON(out, *indent))
 	case strings.HasSuffix(*output, ".xml"):
-		failSave(d.SaveXML(out))
+		failSave(d.SaveXML(out, *indent))
 	default:
-		failSave(d.SaveHTML(out))
+		failSave(d.SaveHTML(out, *indent))
 	}
 }

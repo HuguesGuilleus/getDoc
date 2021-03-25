@@ -16,13 +16,17 @@ var (
 	//go:embed index.gohtml
 	index []byte
 	// The template to write the list of elements in HTML.
-	Index *template.Template
+	IndexMin *template.Template
+	IndexStd *template.Template
 )
 
 func init() {
 	index = bytes.Replace(index, []byte("/*STYLE*/"), readFs(styleFS, static.CssMinify), 1)
 	index = bytes.Replace(index, []byte("/*JS*/"), readFs(jsFS, static.JsMinify), 1)
-	Index = template.Must(template.New("index").Parse(string(index)))
+
+	IndexStd = template.Must(template.New("index").Parse(string(index)))
+	index = static.HtmlMinify(index)
+	IndexMin = template.Must(template.New("index").Parse(string(index)))
 }
 
 func readFs(s fs.FS, m static.Minifier) []byte {
