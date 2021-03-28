@@ -1,0 +1,11 @@
+body {
+	padding: 2ex;
+	font-family: mono;
+	font-size: large;
+	background: lightgrey;
+
+	word-break: break-all;
+	overflow-wrap: anywhere;
+
+	/* white-space: pre-wrap; */
+}

@@ -76,10 +76,21 @@ func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser pa
 		return
 	}
 	defer f.Close()
+	d.readOneReader(p, f, parser)
+}
 
-	d.Log.Println("[READ]", p)
-	if err := parser(p, f, &d.Index); err != nil {
-		d.Log.Printf("[ERROR] parse %q fail: %v\n", p, err)
+func (d *Doc) ReadOne(root string, r io.Reader) {
+	parser := ParserList[strings.TrimPrefix(path.Ext(root), ".")]
+	if parser == nil {
+		return
+	}
+	d.readOneReader(root, r, parser)
+}
+
+func (d *Doc) readOneReader(root string, r io.Reader, parser parser.Parser) {
+	d.Log.Println("[READ]", root)
+	if err := parser(root, r, &d.Index); err != nil {
+		d.Log.Printf("[ERROR] parse %q fail: %v\n", root, err)
 		return
 	}
 }

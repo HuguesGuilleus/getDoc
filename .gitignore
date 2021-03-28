@@ -6,3 +6,5 @@ getDoc.exe
 doc.html
 doc.json
 doc.xml
+
+wa/worker.wasm
