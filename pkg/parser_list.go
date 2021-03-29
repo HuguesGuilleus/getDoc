@@ -22,8 +22,8 @@ func ParserListExt() (list []string) {
 
 // Get the extention of the p (file path) then get the Parse with ParserList.
 func getParser(p string) parser.Parser {
-	for i := len(p) - 1; i >= 0; i-- {
-		switch p[i] {
+	for i := len(p); i > 0; i-- {
+		switch p[i-1] {
 		case '/', '.':
 			return ParserList[p[i:]]
 		}

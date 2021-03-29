@@ -12,6 +12,7 @@ import (
 	"io"
 	"io/fs"
 	"log"
+	"path"
 	"sync"
 	"time"
 )
@@ -28,6 +29,8 @@ type Doc struct {
 
 	// The logger. To print nothing: SetOutput(io.Discard)
 	Log log.Logger `json:"-" xml:"-"`
+
+	wg sync.WaitGroup
 }
 
 // Init the doc information for safe use.
@@ -43,10 +46,6 @@ func (d *Doc) init() {
 // Get the documentation from files.
 func (d *Doc) Read(root string, fsys fs.FS) error {
 	d.init()
-
-	var wg sync.WaitGroup
-	defer wg.Wait()
-
 	return fs.WalkDir(fsys, ".", func(p string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -58,34 +57,37 @@ func (d *Doc) Read(root string, fsys fs.FS) error {
 		if parser == nil {
 			return nil
 		}
-		wg.Add(1)
-		go d.readFile(fsys, root, p, &wg, parser)
-
+		d.wg.Add(1)
+		go d.readFile(fsys, root, p, parser)
 		return nil
 	})
 }
 
-func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser parser.Parser) {
-	defer wg.Done()
-
+func (d *Doc) readFile(fsys fs.FS, root, p string, parser parser.Parser) {
 	f, err := fsys.Open(p)
 	if err != nil {
 		d.Log.Printf("[ERROR] %q fail: %v\n", p, err)
+		d.wg.Done()
 		return
 	}
 	defer f.Close()
-	d.readOneReader(p, f, parser)
+	d.readOneReader(path.Join(root, p), f, parser)
 }
 
+// ReadOne gets a parser for the file root and use it one the reader r
+// and add the Element to the doc Index. The parsing is in an other goroutine.
 func (d *Doc) ReadOne(root string, r io.Reader) {
+	d.init()
 	parser := getParser(root)
 	if parser == nil {
 		return
 	}
-	d.readOneReader(root, r, parser)
+	d.wg.Add(1)
+	go d.readOneReader(root, r, parser)
 }
 
 func (d *Doc) readOneReader(root string, r io.Reader, parser parser.Parser) {
+	defer d.wg.Done()
 	d.Log.Println("[READ]", root)
 	if err := parser(root, r, &d.Index); err != nil {
 		d.Log.Printf("[ERROR] parse %q fail: %v\n", root, err)
@@ -118,8 +120,9 @@ func (d *Doc) SaveXML(w io.Writer, indent bool) error {
 	return enc.Encode(d)
 }
 
-// Log the output save and sort the index.
+// Wait all file parsing, log the save event and sort the index.
 func (d *Doc) save(w interface{}, format string) {
+	d.wg.Wait()
 	if n, ok := w.(interface{ Name() string }); ok {
 		d.Log.Printf("[SAVE:%s] %s\n", format, n.Name())
 	} else {
