@@ -11,24 +11,35 @@
 <body>
 
 	<main id=general>
-		<label for=files>Input file or drop file</label>
-		<input type="file" multiple id=files accept="*/*" hidden>
-		<br>
+		<div class="" hidden>
+			<label for=files>Input file or drop file</label>
+			<input type="file" multiple id=files accept="*/*" hidden>
+			<br>
+		</div>
 
-		<button type="button" id=reset>Reset</button><br>
 
-		<label for=title>Define the title of the generated doc:</label>
-		<input type=text id=title placeholder="Title">
-		<button type=button id="title-set">Set!</button>
-		<br>
-		<button type="button" id=gen>Generate</button>
-		<a id=doc target="_blank" hidden>HTML<br></a>
+		<div class="line">
+			<input type=text id=title placeholder="Title">
+			<button type=button id=title-set>Set!</button>
 
+			<button type=button id=gen-html>Generate HTML</button>
+			<a id=doc-html target="_blank" hidden>Open HTML</a>
+
+			<button type=button id=reset>Reset</button>
+		</div>
+
+		<div class="line">
+			<label for=files>Click to open file window or drop file</label>
+			<input type=file multiple accept="*/*" hidden id=files>
+			<br>
+		</div>
+
+		<!-- <pre id=log>[YOLO]</pre> -->
 		<pre id=log></pre>
 	</main>
 
 	<main id=dropzone hidden>
-		Drop here your files.
+		<label>Drop here your files.</label>
 	</main>
 
 </body>

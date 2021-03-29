@@ -7,27 +7,28 @@ function m() {
 		title = $('title'),
 		general = $('general'),
 		dropzone = $('dropzone'),
-		doc = $('doc'),
+		docHtml = $('doc-html'),
 		files = $('files'),
 		w = new Worker('worker.js');
 
 	let extSupported = [];
 
 	$('title-set').addEventListener('click', () => {
-		doc.hidden = true;
+		docHtml.hidden = true;
 		w.postMessage({
 			type: 'title',
 			title: title.value,
 		});
 	});
 
-	$('gen').addEventListener('click', () => {
+	$('gen-html').addEventListener('click', () => {
 		w.postMessage({
 			type: 'ask',
 		});
 	});
 
 	$('reset').addEventListener('click', () => {
+		docHtml.hidden = true;
 		w.postMessage({
 			type: 'reset',
 		});
@@ -35,7 +36,7 @@ function m() {
 
 	// Input files
 	files.addEventListener('change', () => {
-		doc.hidden = true;
+		docHtml.hidden = true;
 		Array.from(files.files).forEach(f => w.postMessage({
 			type: 'blob',
 			name: f.name,
@@ -59,7 +60,7 @@ function m() {
 		dropzone.hidden = true;
 	}));
 	document.addEventListener('drop', async e => {
-		doc.hidden = true;
+		docHtml.hidden = true;
 		Array.from(e.dataTransfer.items)
 			.map(e => e.webkitGetAsEntry())
 			.map(async function readFileOrDir(f) {
@@ -90,9 +91,9 @@ function m() {
 			extSupported = data.ext.map(e => new RegExp('[./]' + e + '$'));
 			break;
 		case 'doc':
-			window.URL.revokeObjectURL(doc.href);
-			doc.href = URL.createObjectURL(data.blob);
-			doc.hidden = false;
+			window.URL.revokeObjectURL(docHtml.href);
+			docHtml.href = URL.createObjectURL(data.blob);
+			docHtml.hidden = false;
 			break;
 		default:
 			console.error('Unknown message type:', data);

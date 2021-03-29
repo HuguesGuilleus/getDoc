@@ -1,3 +1,7 @@
+*[hidden] {
+	display: none !important;
+}
+
 body {
 	padding: 2ex;
 	font-family: mono;
@@ -8,4 +12,34 @@ body {
 	overflow-wrap: anywhere;
 
 	/* white-space: pre-wrap; */
+}
+
+pre {
+	font: inherit;
+}
+
+.line {
+	margin: 1ex 0;
+}
+
+a,
+button,
+input[type=text],
+label {
+	margin: 0 1ex 0 0;
+	border: none;
+	padding: 0.3ex 1ex;
+	font-size: inherit;
+	color: inherit;
+	background: white;
+	text-decoration: none;
+}
+
+a:hover,
+button:hover,
+input[type=text]:focus,
+input[type=text]:hover,
+label:hover {
+	background: dodgerblue;
+	color: black;
 }
