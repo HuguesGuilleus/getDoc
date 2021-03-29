@@ -12,8 +12,6 @@ import (
 	"io"
 	"io/fs"
 	"log"
-	"path"
-	"strings"
 	"sync"
 	"time"
 )
@@ -56,7 +54,7 @@ func (d *Doc) Read(root string, fsys fs.FS) error {
 			return nil
 		}
 
-		parser := ParserList[strings.TrimPrefix(path.Ext(p), ".")]
+		parser := getParser(p)
 		if parser == nil {
 			return nil
 		}
@@ -80,7 +78,7 @@ func (d *Doc) readFile(fsys fs.FS, root, p string, wg *sync.WaitGroup, parser pa
 }
 
 func (d *Doc) ReadOne(root string, r io.Reader) {
-	parser := ParserList[strings.TrimPrefix(path.Ext(root), ".")]
+	parser := getParser(root)
 	if parser == nil {
 		return
 	}

@@ -30,9 +30,9 @@ func main() {
 		fmt.Println("Inputs can be directorys or files, by default is the")
 		fmt.Println("current directory. Directory are readed recurively.")
 		fmt.Println()
-		log.Println("SUPORTED LANGUAGES:")
-		for _, lang := range []string{"bash", "c", "go", "js"} {
-			fmt.Println("  -", lang)
+		log.Println("SUPORTED EXTENTIONS:")
+		for _, ext := range doc.ParserListExt() {
+			fmt.Println("  -", ext)
 		}
 		fmt.Println()
 

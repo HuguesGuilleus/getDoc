@@ -9,3 +9,24 @@ import (
 )
 
 var ParserList map[string]parser.Parser = parser.GetParserList()
+
+func ParserListExt() (list []string) {
+	list = make([]string, len(ParserList))
+	i := 0
+	for k := range ParserList {
+		list[i] = k
+		i++
+	}
+	return
+}
+
+// Get the extention of the p (file path) then get the Parse with ParserList.
+func getParser(p string) parser.Parser {
+	for i := len(p) - 1; i >= 0; i-- {
+		switch p[i] {
+		case '/', '.':
+			return ParserList[p[i:]]
+		}
+	}
+	return ParserList[p]
+}
