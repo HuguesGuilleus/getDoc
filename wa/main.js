@@ -11,6 +11,8 @@ function m() {
 		files = $('files'),
 		w = new Worker('worker.js');
 
+	let extSupported = [];
+
 	$('title-set').addEventListener('click', () => {
 		doc.hidden = true;
 		w.postMessage({
@@ -22,6 +24,12 @@ function m() {
 	$('gen').addEventListener('click', () => {
 		w.postMessage({
 			type: 'ask',
+		});
+	});
+
+	$('reset').addEventListener('click', () => {
+		w.postMessage({
+			type: 'reset',
 		});
 	});
 
@@ -57,7 +65,7 @@ function m() {
 			.map(async function readFileOrDir(f) {
 				if (f.isDirectory) {
 					f.createReader().readEntries(l => l.forEach(readFileOrDir));
-				} else {
+				} else if (extSupported.some(ext => ext.test(f.fullPath))) {
 					w.postMessage({
 						type: 'blob',
 						name: f.fullPath,
@@ -71,16 +79,19 @@ function m() {
 	w.onmessage = ({
 		data
 	}) => {
-		switch (data.Type) {
-		case 'logreset':
-			l.innerText = data.Text || '';
+		switch (data.type) {
+		case 'logReset':
+			l.innerText = data.text || '';
 			break;
-		case 'log':
-			l.innerText += data.Line;
+		case 'logLine':
+			l.innerText += data.line;
 			break;
-		case 'gen':
+		case 'ext':
+			extSupported = data.ext.map(e => new RegExp('[./]' + e + '$'));
+			break;
+		case 'doc':
 			window.URL.revokeObjectURL(doc.href);
-			doc.href = URL.createObjectURL(data.Blob);
+			doc.href = URL.createObjectURL(data.blob);
 			doc.hidden = false;
 			break;
 		default:

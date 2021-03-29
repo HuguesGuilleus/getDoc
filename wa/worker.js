@@ -667,8 +667,8 @@
 
 (async function travailleur() {
 	const log = ms => self.postMessage({
-		Type: 'logreset',
-		Text: 'fetch the worker: ' + ms + '\n',
+		type: 'logReset',
+		text: 'fetch the worker: ' + ms + '\n',
 	});
 	log('...');
 	const rep = await fetch('worker.wasm'),

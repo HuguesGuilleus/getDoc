@@ -6,6 +6,7 @@ package doc
 
 import (
 	"github.com/HuguesGuilleus/getDoc/parser"
+	"sort"
 )
 
 var ParserList map[string]parser.Parser = parser.GetParserList()
@@ -17,6 +18,7 @@ func ParserListExt() (list []string) {
 		list[i] = k
 		i++
 	}
+	sort.Strings(list)
 	return
 }
 

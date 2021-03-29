@@ -2,6 +2,8 @@ github.com/HuguesGuilleus/go-workerglobalscope v0.0.0-20210317181042-58c3a46e26f
 github.com/HuguesGuilleus/go-workerglobalscope v0.0.0-20210317181042-58c3a46e26f7/go.mod h1:OeBdPU46PAsi2w4R4N4mJdp0FO1sMBTXJ0F6fSojlB8=
 github.com/HuguesGuilleus/go-workerglobalscope v0.1.0 h1:mlwb4hTexIs86iUmnQhl3JaxyZFETo3u9Pyi1eA510A=
 github.com/HuguesGuilleus/go-workerglobalscope v0.1.0/go.mod h1:OeBdPU46PAsi2w4R4N4mJdp0FO1sMBTXJ0F6fSojlB8=
+github.com/HuguesGuilleus/go-workerglobalscope v0.2.0 h1:cgGdN238ydAshky0IVqoF5PCzTQt4jlMleXQYO/r5O0=
+github.com/HuguesGuilleus/go-workerglobalscope v0.2.0/go.mod h1:OeBdPU46PAsi2w4R4N4mJdp0FO1sMBTXJ0F6fSojlB8=
 github.com/HuguesGuilleus/static.v3 v1.0.0 h1:GKG9U86/dvzflM9+0HzH8IjDjpW8DLqSZGh5/OCk7jc=
 github.com/HuguesGuilleus/static.v3 v1.0.0/go.mod h1:RS0zGRm9z72/dca2R1HGUpufIRBruDnuyI4VD1Q/LuM=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
