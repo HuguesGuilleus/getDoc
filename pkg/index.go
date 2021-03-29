@@ -13,8 +13,11 @@ import (
 	"io/fs"
 	"log"
 	"path"
+	"sort"
+	"strings"
 	"sync"
 	"time"
+	"unicode"
 )
 
 type Doc struct {
@@ -123,11 +126,58 @@ func (d *Doc) SaveXML(w io.Writer, indent bool) error {
 // Wait all file parsing, log the save event and sort the index.
 func (d *Doc) save(w interface{}, format string) {
 	d.wg.Wait()
+
 	if n, ok := w.(interface{ Name() string }); ok {
 		d.Log.Printf("[SAVE:%s] %s\n", format, n.Name())
 	} else {
 		d.Log.Printf("[SAVE:%s]\n", format)
 	}
-	// TODO: sort the Index
-	// d.Index.sort()
+
+	// Sort Doc.Index
+	// lower concats into buff (name + '\0' + file) in lower case.
+	lower := func(buff *strings.Builder, name, file string) {
+		buff.Reset()
+		for _, r := range name {
+			buff.WriteRune(unicode.ToLower(r))
+		}
+		buff.WriteByte(0)
+		for _, r := range file {
+			buff.WriteRune(unicode.ToLower(r))
+		}
+	}
+	var s1, s2 strings.Builder
+	sort.Slice(d.Index, func(i int, j int) bool {
+		lower(&s1, d.Index[i].Name, d.Index[i].FileName)
+		lower(&s2, d.Index[j].Name, d.Index[j].FileName)
+		return s1.String() < s2.String()
+	})
+
+	// Generate ListFile, ListLang, ListType
+	m := make(map[string]bool, len(d.Index))
+	cat := func(m map[string]bool) (l []string) {
+		l = make([]string, len(m))
+		i := 0
+		for k := range m {
+			l[i] = k
+			i++
+			delete(m, k)
+		}
+		sort.Strings(l)
+		return l
+	}
+
+	for _, e := range d.Index {
+		m[e.FileName] = true
+	}
+	d.ListFile = cat(m)
+
+	for _, e := range d.Index {
+		m[e.Lang] = true
+	}
+	d.ListLang = cat(m)
+
+	for _, e := range d.Index {
+		m[e.Type] = true
+	}
+	d.ListType = cat(m)
 }
