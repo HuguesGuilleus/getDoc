@@ -30,13 +30,17 @@ type Doc struct {
 	ListLang []string
 	ListType []string
 
+	// Reset in each Doc.init (to each reading), then Save function use it
+	// to generate ListFile, ListLang, ListType with the function Doc.genList
+	onceListGen sync.Once
+
 	// The logger. To print nothing: SetOutput(io.Discard)
 	Log log.Logger `json:"-" xml:"-"`
 
 	wg sync.WaitGroup
 }
 
-// Init the doc information for safe use.
+// Init the doc information for safe use before reading
 func (d *Doc) init() {
 	if d.Log.Writer() == nil {
 		d.Log.SetOutput(io.Discard)
@@ -44,6 +48,7 @@ func (d *Doc) init() {
 	if d.Time.IsZero() {
 		d.Time = time.Now().UTC().Truncate(time.Second)
 	}
+	d.onceListGen = sync.Once{}
 }
 
 // Get the documentation from files.
@@ -126,13 +131,17 @@ func (d *Doc) SaveXML(w io.Writer, indent bool) error {
 // Wait all file parsing, log the save event and sort the index.
 func (d *Doc) save(w interface{}, format string) {
 	d.wg.Wait()
+	d.onceListGen.Do(d.genList)
 
 	if n, ok := w.(interface{ Name() string }); ok {
 		d.Log.Printf("[SAVE:%s] %s\n", format, n.Name())
 	} else {
 		d.Log.Printf("[SAVE:%s]\n", format)
 	}
+}
 
+// Generate all list
+func (d *Doc) genList() {
 	// Sort Doc.Index
 	// lower concats into buff (name + '\0' + file) in lower case.
 	lower := func(buff *strings.Builder, name, file string) {
