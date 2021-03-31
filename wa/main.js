@@ -39,12 +39,20 @@ function m() {
 
 	let extSupported = [];
 
-	$('title-set').addEventListener('click', () => {
+	function setTitle() {
 		resetOutput();
 		w.postMessage({
 			type: 'title',
 			title: title.value,
 		});
+	}
+	$('title-set').addEventListener('click', setTitle);
+	title.addEventListener('keydown', e => {
+		switch (e.key) {
+		case 'Tab':
+		case 'Enter':
+			setTitle();
+		}
 	});
 
 	function resetOutput() {
