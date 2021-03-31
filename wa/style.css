@@ -10,8 +10,6 @@ body {
 
 	word-break: break-all;
 	overflow-wrap: anywhere;
-
-	/* white-space: pre-wrap; */
 }
 
 pre {

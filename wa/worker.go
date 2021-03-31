@@ -47,13 +47,27 @@ func main() {
 			}(m)
 		case "ask":
 			var buff bytes.Buffer
-			d.SaveHTML(&buff, false)
+			var t string
+			switch m.Get("format").String() {
+			case "html":
+				d.SaveHTML(&buff, false)
+				t = "text/html; charset=utf-8"
+			case "json":
+				d.SaveJSON(&buff, false)
+				t = "application/json"
+			case "xml":
+				d.SaveXML(&buff, false)
+				t = "application/xml"
+			default:
+				console.Error("Unknwon saver format:", m.Get("format").String())
+				continue
+			}
 			message.Post(struct {
 				Type string   `js:"type"`
 				Blob js.Value `js:"blob"`
 			}{
 				Type: "doc",
-				Blob: ws.NewBlob("text/html; charset=utf-8", buff.Bytes()),
+				Blob: ws.NewBlob(t, buff.Bytes()),
 			})
 		case "reset":
 			d = doc.Doc{}

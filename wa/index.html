@@ -11,20 +11,18 @@
 <body>
 
 	<main id=general>
-		<div class="" hidden>
-			<label for=files>Input file or drop file</label>
-			<input type="file" multiple id=files accept="*/*" hidden>
-			<br>
+		<div class="line">
+			<input type=text id=title placeholder="Title" autofocus>
+			<button type=button id=title-set>Set!</button>
 		</div>
 
-
 		<div class="line">
-			<input type=text id=title placeholder="Title">
-			<button type=button id=title-set>Set!</button>
-
 			<button type=button id=gen-html>Generate HTML</button>
 			<a id=doc-html target="_blank" hidden>Open HTML</a>
-
+			<button type=button id=gen-json>Generate JSON</button>
+			<a id=doc-json target="_blank" hidden>Open JSON</a>
+			<button type=button id=gen-xml>Generate XML</button>
+			<a id=doc-xml target="_blank" hidden>Open XML</a>
 			<button type=button id=reset>Reset</button>
 		</div>
 
@@ -34,7 +32,6 @@
 			<br>
 		</div>
 
-		<!-- <pre id=log>[YOLO]</pre> -->
 		<pre id=log></pre>
 	</main>
 

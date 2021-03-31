@@ -2,33 +2,64 @@ function $(id) {
 	return document.getElementById(id);
 }
 
+// All informations about one output format.
+function output(ext) {
+	this.ext = ext;
+	this.gen = $('gen-' + ext);
+	this.doc = $('doc-' + ext);
+	this.reset = () => {
+		this.gen.hidden = false;
+		this.doc.hidden = true;
+		window.URL.revokeObjectURL(this.url);
+		this.url = '';
+	};
+	this.setURL = u => {
+		this.doc.hidden = false;
+		this.gen.hidden = true;
+		window.URL.revokeObjectURL(this.url);
+		this.url;
+		this.doc.href = u;
+	};
+}
+
 function m() {
 	const l = $('log'),
 		title = $('title'),
 		general = $('general'),
 		dropzone = $('dropzone'),
-		docHtml = $('doc-html'),
+
+		outs = new Map([
+			['text/html', new output('html')],
+			['application/json', new output('json')],
+			['application/xml', new output('xml')],
+		]),
+
 		files = $('files'),
 		w = new Worker('worker.js');
 
 	let extSupported = [];
 
 	$('title-set').addEventListener('click', () => {
-		docHtml.hidden = true;
+		resetOutput();
 		w.postMessage({
 			type: 'title',
 			title: title.value,
 		});
 	});
 
-	$('gen-html').addEventListener('click', () => {
-		w.postMessage({
+	function resetOutput() {
+		outs.forEach(o => o.reset());
+	}
+
+	outs.forEach((o, k) => o.gen.addEventListener('click',
+		() => w.postMessage({
 			type: 'ask',
-		});
-	});
+			format: o.ext,
+		})
+	));
 
 	$('reset').addEventListener('click', () => {
-		docHtml.hidden = true;
+		resetOutput();
 		w.postMessage({
 			type: 'reset',
 		});
@@ -36,7 +67,7 @@ function m() {
 
 	// Input files
 	files.addEventListener('change', () => {
-		docHtml.hidden = true;
+		resetOutput();
 		Array.from(files.files).forEach(f => w.postMessage({
 			type: 'blob',
 			name: f.name,
@@ -60,7 +91,7 @@ function m() {
 		dropzone.hidden = true;
 	}));
 	document.addEventListener('drop', async e => {
-		docHtml.hidden = true;
+		resetOutput();
 		Array.from(e.dataTransfer.items)
 			.map(e => e.webkitGetAsEntry())
 			.map(async function readFileOrDir(f) {
@@ -91,9 +122,12 @@ function m() {
 			extSupported = data.ext.map(e => new RegExp('[./]' + e + '$'));
 			break;
 		case 'doc':
-			window.URL.revokeObjectURL(docHtml.href);
-			docHtml.href = URL.createObjectURL(data.blob);
-			docHtml.hidden = false;
+			const o = outs.get(data.blob.type.replace(/;.*/, ''));
+			if (o) {
+				o.setURL(URL.createObjectURL(data.blob))
+			} else {
+				console.error('Unknwon Blob type:', data.blob.type);
+			}
 			break;
 		default:
 			console.error('Unknown message type:', data);
