@@ -83,6 +83,14 @@ function m() {
 		}));
 	});
 
+	$('files-label').addEventListener('keydown', e => {
+		switch (e.key) {
+		case ' ':
+		case 'Enter':
+			files.click();
+		}
+	});
+
 	// Drop files
 	document.addEventListener('dragenter', e => {
 		general.hidden = true;

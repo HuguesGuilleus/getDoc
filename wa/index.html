@@ -12,8 +12,16 @@
 
 	<main id=general>
 		<div class="line">
+			<label for=title>Set Title:</label>
 			<input type=text id=title placeholder="Title" autofocus>
 			<button type=button id=title-set>Set!</button>
+		</div>
+
+		<div class="line">
+			<label role=button tabindex=0 for=files id=files-label>
+				Click to open file window or drop file
+			</label>
+			<input type=file multiple accept="*/*" hidden id=files>
 		</div>
 
 		<div class="line">
@@ -24,12 +32,6 @@
 			<button type=button id=gen-xml>Generate XML</button>
 			<a id=doc-xml target="_blank" hidden>Open XML</a>
 			<button type=button id=reset>Reset</button>
-		</div>
-
-		<div class="line">
-			<label for=files>Click to open file window or drop file</label>
-			<input type=file multiple accept="*/*" hidden id=files>
-			<br>
 		</div>
 
 		<pre id=log></pre>
