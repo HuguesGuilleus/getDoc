@@ -83,7 +83,7 @@ func (d *Doc) readFile(fsys fs.FS, root, p string, parser parser.Parser) {
 }
 
 // ReadOne gets a parser for the file root and use it one the reader r
-// and add the Element to the doc Index. The parsing is in an other goroutine.
+// and add the Element to the doc Index.
 func (d *Doc) ReadOne(root string, r io.Reader) {
 	d.init()
 	parser := getParser(root)
@@ -91,7 +91,7 @@ func (d *Doc) ReadOne(root string, r io.Reader) {
 		return
 	}
 	d.wg.Add(1)
-	go d.readOneReader(root, r, parser)
+	d.readOneReader(root, r, parser)
 }
 
 func (d *Doc) readOneReader(root string, r io.Reader, parser parser.Parser) {
