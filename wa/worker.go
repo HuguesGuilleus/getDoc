@@ -10,23 +10,29 @@
 package main
 
 import (
+	"archive/tar"
+	"archive/zip"
 	"bytes"
+	"compress/gzip"
+	"fmt"
 	"github.com/HuguesGuilleus/getDoc/pkg"
 	"github.com/HuguesGuilleus/go-workerglobalscope"
 	"github.com/HuguesGuilleus/go-workerglobalscope/console"
 	"github.com/HuguesGuilleus/go-workerglobalscope/message"
+	"io"
 	"strings"
 	"syscall/js"
 )
 
 func main() {
-	logReset("[INIT]\n[EXTENTION] " +
-		strings.Join(doc.ParserListExt(), ", ") +
-		"\n\n")
 	message.Post(struct {
 		Type string   `js:"type"`
 		Ext  []string `js:"ext"`
-	}{Type: "ext", Ext: doc.ParserListExt()})
+	}{Type: "ext", Ext: append(doc.ParserListExt(), "zip", "tar\\.gz", "tar")})
+
+	logReset("[INIT]\n[EXTENTION] " + strings.Join(
+		append(doc.ParserListExt(), ".zip", ".tar.gz", ".tar"), ", ") +
+		"\n\n")
 
 	var d doc.Doc
 	d.Log.SetOutput(L{})
@@ -37,14 +43,7 @@ func main() {
 			d.Title = m.Get("title").String()
 			log("[TITLE] " + d.Title)
 		case "blob":
-			go func(m js.Value) {
-				r, err := ws.ReadBody(m.Get("blob"))
-				if err != nil {
-					log("[ERROR] get blob fail: " + err.Error() + "\n")
-					return
-				}
-				d.ReadOne(m.Get("name").String(), r)
-			}(m)
+			go addBlob(m, &d)
 		case "ask":
 			var buff bytes.Buffer
 			var t string
@@ -76,6 +75,53 @@ func main() {
 		default:
 			console.Error("Unknown message type:", t)
 		}
+	}
+}
+
+// Read a blob to the Doc.
+func addBlob(m js.Value, d *doc.Doc) {
+	blobReader, err := ws.ReadBody(m.Get("blob"))
+	if err != nil {
+		log("[ERROR] get blob fail: " + err.Error() + "\n")
+		return
+	}
+
+	r := io.Reader(blobReader)
+	n := m.Get("name").String()
+	switch {
+	case strings.HasSuffix(n, ".zip"):
+		fsys, err := zip.NewReader(blobReader, int64(m.Get("blob").Get("size").Int()))
+		if err != nil {
+			log(fmt.Sprintf("[ERROR] fail to read zip archive: %q, %v\n", n, err))
+			return
+		}
+		d.Read(n, fsys)
+	case strings.HasSuffix(n, ".tar.gz"):
+		r, err = gzip.NewReader(r)
+		if err != nil {
+			log(fmt.Sprintf("[ERROR] gz read of %q fail: %v\n", n, err))
+			return
+		}
+		fallthrough
+	case strings.HasSuffix(n, ".tar"):
+		r := tar.NewReader(r)
+		for {
+			h, err := r.Next()
+			switch err {
+			case nil:
+				if h.FileInfo().IsDir() {
+					continue
+				}
+				d.ReadOne(h.FileInfo().Name(), r)
+			case io.EOF:
+				return
+			default:
+				log(fmt.Sprintf("[ERROR] tar read of %q fail: %v\n", n, err))
+				return
+			}
+		}
+	default:
+		d.ReadOne(n, r)
 	}
 }
 
